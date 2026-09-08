@@ -32,15 +32,50 @@ from .prompts import build_batch_prompt, build_simple_prompt
 class TweakExtractor:
     """Extracts structured modifications from review text using LLM processing."""
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-3.5-turbo"):
+    # Gemini's OpenAI-compatible endpoint (free tier, no billing required).
+    GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
+    # Groq's OpenAI-compatible endpoint (free tier, no billing required).
+    GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        model: Optional[str] = None,
+        base_url: Optional[str] = None,
+    ):
         """
         Initialize the TweakExtractor.
 
+        Provider resolution (when api_key/base_url aren't explicitly passed),
+        checked in this priority order:
+        1. GROQ_API_KEY - Groq's free-tier API via its OpenAI-compatible
+           endpoint (model defaults to "openai/gpt-oss-20b", override
+           with GROQ_MODEL).
+        2. GEMINI_API_KEY - Google's free-tier Gemini API via its
+           OpenAI-compatible endpoint (model defaults to "gemini-3.6-flash",
+           override with GEMINI_MODEL).
+        3. OPENAI_API_KEY - OpenAI (model defaults to "gpt-3.5-turbo").
+
         Args:
-            api_key: OpenAI API key (defaults to OPENAI_API_KEY env var)
-            model: OpenAI model to use for extraction
+            api_key: API key for the chosen provider (defaults to env vars above)
+            model: Model name to use for extraction (provider-specific default if omitted)
+            base_url: Override the API base URL (defaults to provider-specific endpoint)
         """
-        self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
+        groq_key = os.getenv("GROQ_API_KEY")
+        gemini_key = os.getenv("GEMINI_API_KEY")
+        if api_key is None and groq_key:
+            api_key = groq_key
+            base_url = base_url or self.GROQ_BASE_URL
+            model = model or os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")
+        elif api_key is None and gemini_key:
+            api_key = gemini_key
+            base_url = base_url or self.GEMINI_BASE_URL
+            model = model or os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
+        else:
+            api_key = api_key or os.getenv("OPENAI_API_KEY")
+            model = model or "gpt-3.5-turbo"
+
+        self.client = OpenAI(api_key=api_key, base_url=base_url)
         self.model = model
         logger.info(f"Initialized TweakExtractor with model: {model}")
 

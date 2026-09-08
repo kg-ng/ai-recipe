@@ -28,6 +28,8 @@ class LLMAnalysisPipeline:
     def __init__(
         self,
         openai_api_key: Optional[str] = None,
+        model: Optional[str] = None,
+        base_url: Optional[str] = None,
         output_dir: str = "data/enhanced",
         pipeline_version: str = "1.0.0",
     ):
@@ -35,7 +37,11 @@ class LLMAnalysisPipeline:
         Initialize the complete LLM Analysis Pipeline.
 
         Args:
-            openai_api_key: OpenAI API key (loads from env if not provided)
+            openai_api_key: API key for the LLM provider (loads from env if not
+                provided; auto-detects Gemini's free tier via GEMINI_API_KEY,
+                falling back to OpenAI's OPENAI_API_KEY - see TweakExtractor)
+            model: Model name override (provider-specific default if omitted)
+            base_url: API base URL override (provider-specific default if omitted)
             output_dir: Directory to save enhanced recipes
             pipeline_version: Version identifier for tracking
         """
@@ -46,7 +52,9 @@ class LLMAnalysisPipeline:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         # Initialize pipeline components
-        self.tweak_extractor = TweakExtractor(api_key=openai_api_key)
+        self.tweak_extractor = TweakExtractor(
+            api_key=openai_api_key, model=model, base_url=base_url
+        )
         self.recipe_modifier = RecipeModifier()
         self.enhanced_generator = EnhancedRecipeGenerator(
             pipeline_version=pipeline_version
