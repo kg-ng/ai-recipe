@@ -108,10 +108,73 @@ class LLMAnalysisPipeline:
                     rating=review_data.get("rating"),
                     username=review_data.get("username"),
                     has_modification=review_data.get("has_modification", False),
+                    is_featured=review_data.get("is_featured", False),
                 )
                 reviews.append(review)
 
         return reviews
+
+    def parse_featured_tweaks(self, recipe_data: Dict[str, Any]) -> List[Review]:
+        """
+        Parse the recipe's `featured_tweaks` - the highest-voted, community-tested
+        modifications AllRecipes surfaces (the actual "Featured Tweaks" this
+        product is meant to apply). This is the primary source of modifications;
+        the generic `reviews` list is a superset that includes non-featured/non-
+        modification reviews not meant to drive edits.
+
+        Args:
+            recipe_data: Raw recipe data containing a `featured_tweaks` list
+
+        Returns:
+            List of Review objects built from featured_tweaks
+        """
+        reviews = []
+        for review_data in recipe_data.get("featured_tweaks", []):
+            if review_data.get("text"):
+                reviews.append(
+                    Review(
+                        text=review_data["text"],
+                        rating=review_data.get("rating"),
+                        username=review_data.get("username"),
+                        has_modification=review_data.get("has_modification", True),
+                        is_featured=review_data.get("is_featured", True),
+                    )
+                )
+        return reviews
+
+    def select_source_reviews(self, recipe_data: Dict[str, Any]) -> List[Review]:
+        """
+        Select which reviews to extract modifications from.
+
+        Prefers `featured_tweaks` (the highest-voted community-tested tweaks -
+        the actual product premise). Falls back to any review flagged
+        `has_modification` when a recipe has no scraped featured tweaks, so the
+        pipeline still degrades gracefully instead of silently doing nothing.
+
+        Args:
+            recipe_data: Raw recipe data
+
+        Returns:
+            List of Review objects to run extraction against (may be empty)
+        """
+        featured = self.parse_featured_tweaks(recipe_data)
+        if featured:
+            logger.info(f"Using {len(featured)} featured_tweaks as modification source")
+            return featured
+
+        all_reviews = self.parse_reviews_data(recipe_data)
+        fallback = [r for r in all_reviews if r.has_modification]
+        if fallback:
+            logger.warning(
+                "No featured_tweaks found for this recipe - falling back to "
+                f"{len(fallback)} review(s) flagged has_modification"
+            )
+        else:
+            logger.warning(
+                "No featured_tweaks and no has_modification reviews found - "
+                "this recipe has no community tweaks to apply"
+            )
+        return fallback
 
     def process_single_recipe(
         self, recipe_file: str, save_output: bool = True
@@ -132,46 +195,67 @@ class LLMAnalysisPipeline:
             # Step 0: Load and parse data
             recipe_data = self.load_recipe_data(recipe_file)
             recipe = self.parse_recipe_data(recipe_data)
-            reviews = self.parse_reviews_data(recipe_data)
+            all_reviews = self.parse_reviews_data(recipe_data)
+            source_reviews = self.select_source_reviews(recipe_data)
 
             logger.info(f"Loaded recipe: {recipe.title}")
             logger.info(
-                f"Found {len(reviews)} reviews, {len([r for r in reviews if r.has_modification])} with modifications"
+                f"Found {len(all_reviews)} reviews, {len(source_reviews)} selected "
+                "as modification sources (featured_tweaks preferred, has_modification fallback)"
             )
 
-            if not any(r.has_modification for r in reviews):
-                logger.warning("No reviews with modifications found")
-                return None
+            applied_modifications: List[Any] = []
+            modified_recipe = recipe
 
-            # Step 1: Extract modification from one random review
-            logger.info("Step 1: Extracting modification from a single review...")
-            modification, source_review = (
-                self.tweak_extractor.extract_single_modification(reviews, recipe)
-            )
+            if not source_reviews:
+                # No community tweaks scraped for this recipe. Degrade gracefully:
+                # still produce an EnhancedRecipe (0 modifications, honest summary)
+                # instead of returning None and silently dropping the recipe from
+                # `data/enhanced/` - this is a valid product state, not a failure.
+                logger.warning(
+                    "No community tweaks available for this recipe - "
+                    "producing enhanced recipe with zero modifications"
+                )
+            else:
+                # Step 1: Extract ALL discrete modifications from ALL source reviews
+                logger.info(
+                    f"Step 1: Extracting modifications from {len(source_reviews)} "
+                    "source review(s)..."
+                )
+                extracted = self.tweak_extractor.extract_modifications_from_reviews(
+                    source_reviews, recipe
+                )
 
-            if not modification or not source_review:
-                logger.warning("No modification could be extracted")
-                return None
+                if not extracted:
+                    logger.warning(
+                        "No modifications could be extracted from any source review"
+                    )
+                else:
+                    logger.info(
+                        f"Step 2: Applying {len(extracted)} modification(s) to recipe..."
+                    )
+                    current_recipe = recipe
+                    for modification, source_review in extracted:
+                        current_recipe, change_records = (
+                            self.recipe_modifier.apply_modification(
+                                current_recipe, modification
+                            )
+                        )
+                        applied_modifications.append(
+                            (modification, source_review, change_records)
+                        )
+                    modified_recipe = current_recipe
 
-            logger.info(
-                f"Successfully extracted {modification.modification_type} modification"
-            )
-
-            # Step 2: Apply modification to recipe
-            logger.info("Step 2: Applying modification to recipe...")
-            modified_recipe, change_records = self.recipe_modifier.apply_modification(
-                recipe, modification
-            )
-
-            logger.info(
-                f"Applied modification: {len(change_records)} total changes made"
-            )
+                    logger.info(
+                        f"Applied {len(applied_modifications)} modification(s): "
+                        f"{sum(len(c) for _, _, c in applied_modifications)} total changes made"
+                    )
 
             # Step 3: Generate enhanced recipe with attribution
             logger.info("Step 3: Generating enhanced recipe with attribution...")
 
             enhanced_recipe = self.enhanced_generator.generate_enhanced_recipe(
-                recipe, modified_recipe, modification, source_review, change_records
+                recipe, modified_recipe, applied_modifications
             )
 
             logger.info(f"Generated enhanced recipe: {enhanced_recipe.title}")

@@ -88,17 +88,41 @@ class RecipeModifier:
 
             if match and index is not None:
                 original_text = modified_content[index]
-                new_text = original_text.replace(edit.find, edit.replace or "")
-                modified_content[index] = new_text
 
-                change_records.append(ChangeRecord(
-                    type="ingredient" if edit.target == "ingredients" else "instruction",
-                    from_text=original_text,
-                    to_text=new_text,
-                    operation="replace"
-                ))
+                if edit.find in original_text:
+                    # Exact substring present in the fuzzy-matched line - safe to
+                    # do a literal replace.
+                    new_text = original_text.replace(edit.find, edit.replace or "")
+                else:
+                    # find_best_match only guarantees the CLOSEST line, not that
+                    # `edit.find` is literally a substring of it (e.g. the LLM
+                    # paraphrased the quantity/wording). A literal .replace() in
+                    # that case is a silent no-op: it reports success and logs a
+                    # ChangeRecord even though nothing actually changed. Fall back
+                    # to replacing the whole matched line instead of failing
+                    # silently, since we already have high confidence (score >=
+                    # similarity_threshold) that this is the right line to change.
+                    logger.warning(
+                        f"'{edit.find}' is not an exact substring of matched line "
+                        f"'{original_text}' (similarity: {score:.2f}) - replacing "
+                        "the whole line instead of no-op substring replace"
+                    )
+                    new_text = edit.replace or ""
 
-                logger.info(f"Replaced '{edit.find}' with '{edit.replace}' (similarity: {score:.2f})")
+                if new_text == original_text:
+                    logger.warning(
+                        f"Replace produced no actual change for '{edit.find}' - "
+                        "not recording a false-positive diff"
+                    )
+                else:
+                    modified_content[index] = new_text
+                    change_records.append(ChangeRecord(
+                        type="ingredient" if edit.target == "ingredients" else "instruction",
+                        from_text=original_text,
+                        to_text=new_text,
+                        operation="replace"
+                    ))
+                    logger.info(f"Replaced '{edit.find}' with '{edit.replace}' (similarity: {score:.2f})")
             else:
                 logger.warning(f"Could not find '{edit.find}' in {edit.target} (best similarity: {score:.2f})")
 

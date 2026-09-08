@@ -7,7 +7,7 @@ comprehensive enhanced recipe objects.
 """
 
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 
 from loguru import logger
 
@@ -101,6 +101,13 @@ class EnhancedRecipeGenerator:
                 f" (and {len(impact_descriptions) - 3} more improvements)"
             )
 
+        if not modifications_applied:
+            # Explicit, honest message for recipes with no community tweaks yet -
+            # distinguishes "nothing to apply" from a pipeline failure.
+            expected_impact = (
+                "No community-tested modifications were available for this recipe."
+            )
+
         return EnhancementSummary(
             total_changes=total_changes,
             change_types=change_types,
@@ -112,30 +119,30 @@ class EnhancedRecipeGenerator:
         self,
         original_recipe: Recipe,
         modified_recipe: Recipe,
-        modification: ModificationObject,
-        source_review: Review,
-        change_records: List[ChangeRecord],
+        applied_modifications: List[Tuple[ModificationObject, Review, List[ChangeRecord]]],
     ) -> EnhancedRecipe:
         """
         Generate a complete enhanced recipe with attribution.
 
         Args:
             original_recipe: Original unmodified recipe
-            modified_recipe: Recipe with modifications applied
-            modification: Single modification that was applied
-            source_review: Review that suggested the modification
-            change_records: Changes made for the modification
+            modified_recipe: Recipe with all modifications applied
+            applied_modifications: List of (modification, source_review, change_records)
+                tuples - one per discrete modification actually applied. May be an
+                empty list if no community tweaks were available for this recipe;
+                the resulting EnhancedRecipe will honestly reflect zero changes
+                rather than the pipeline failing.
 
         Returns:
             Complete EnhancedRecipe with attribution
         """
         logger.info(f"Generating enhanced recipe for: {original_recipe.title}")
 
-        # Create modification applied record
-        modification_applied = self.create_modification_applied(
-            modification, source_review, change_records
-        )
-        modifications_applied = [modification_applied]
+        # Create one ModificationApplied record per discrete modification
+        modifications_applied = [
+            self.create_modification_applied(modification, source_review, change_records)
+            for modification, source_review, change_records in applied_modifications
+        ]
 
         # Calculate enhancement summary
         enhancement_summary = self.calculate_enhancement_summary(modifications_applied)
