@@ -136,3 +136,36 @@ Fix applied:     Added `extract_modifications_batch()` - sends ALL of a recipe's
 Target file(s):  src/llm_pipeline/models.py, src/llm_pipeline/prompts.py,
                  src/llm_pipeline/tweak_extractor.py, src/tests/test_tweak_extractor.py
 Priority:        MEDIUM
+
+## 2026-09-08 — Live API run confirmed the fix, then live API access surfaced a path bug
+Discovered:      (1) A live run against the real OpenAI API (from a network not
+                 blocking api.openai.com) confirmed the compound-modification fix
+                 works on real model output: a review "I used an ice cream
+                 scoop... I did add an additional egg yolk..." correctly split
+                 into 2 modifications, and a second compound review split into 3.
+                 (2) Free-tier LLM provider support (Groq/Gemini, OpenAI-compatible
+                 endpoints) was added so the pipeline can be validated without
+                 paid credits. (3) Running `test_pipeline.py` exactly as the
+                 README instructs (`cd src && python test_pipeline.py all`)
+                 revealed that enhanced output was being written to
+                 `src/data/enhanced/` instead of the repo-root `data/enhanced/`
+                 that the rest of the README and the original sample files
+                 assume.
+Root cause:      `test_pipeline.py` reads recipes from an explicit `"../data"`
+                 path but never passed a matching `output_dir` to
+                 `LLMAnalysisPipeline()`, so it silently used the library
+                 default `"data/enhanced"` — resolved relative to the *current*
+                 working directory, not the repo root. `../data` and
+                 `data/enhanced` are inconsistent relative-path anchors within
+                 the same script.
+Fix applied:     Passed `output_dir="../data/enhanced"` explicitly in both
+                 `test_single_recipe()` and `test_all_recipes()`, matching the
+                 existing `../data` input path. Consolidated the two split
+                 output locations back into the single canonical
+                 `data/enhanced/` and removed the stray `src/data/` directory.
+                 Added Groq/Gemini provider auto-detection (`GROQ_API_KEY`/
+                 `GEMINI_API_KEY` env vars, OpenAI-compatible endpoints) as a
+                 free-tier alternative to `OPENAI_API_KEY` in `TweakExtractor`.
+Target file(s):  src/test_pipeline.py, src/llm_pipeline/tweak_extractor.py,
+                 src/llm_pipeline/pipeline.py, README.md, data/enhanced/*
+Priority:        MEDIUM

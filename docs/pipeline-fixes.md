@@ -164,6 +164,31 @@ asserts exactly 1 `chat.completions.create` call for 2 reviews yielding 4
 modifications; `..._falls_back_per_review_on_batch_failure` proves the resilience
 fallback still works when batching fails.
 
+### 7. `output_dir` silently mismatched the README's own instructions (MEDIUM)
+
+**Found:** during the live 6-recipe verification run (below), following the
+README's documented steps exactly (`cd src && python test_pipeline.py all`)
+produced enhanced output in `src/data/enhanced/` — not the repo-root
+`data/enhanced/` that the README's "Enhanced recipes are saved in..." section,
+and the originally-committed sample outputs, both assume.
+
+**Root cause:** `test_pipeline.py` reads recipes from an explicit `"../data"`
+path (correctly anchored relative to `src/`), but never passed a matching
+`output_dir` to `LLMAnalysisPipeline()`. That left the library default,
+`"data/enhanced"`, in effect — which resolves relative to the *current working
+directory*, not the repo root. Two relative paths in the same script,
+inconsistently anchored.
+
+**Fix:** pass `output_dir="../data/enhanced"` explicitly in both
+`test_single_recipe()` and `test_all_recipes()`, matching the existing
+`../data` input path, so output always lands in one place regardless of
+where the script happens to be invoked from. Consolidated the two
+already-split output locations back into `data/enhanced/` and removed the
+stray `src/data/` directory.
+
+**Proof:** re-ran `python test_pipeline.py all` from `src/` after the fix;
+output landed directly in the repo-root `data/enhanced/` as expected.
+
 ## Live Verification
 
 The mocked tests prove the extraction logic is structurally correct, but the
@@ -192,8 +217,40 @@ This run also surfaced a real infrastructure constraint worth documenting:
 the primary working environment used for this assignment blocks outbound
 calls to `api.openai.com` at the network/proxy level (confirmed via a direct
 `PermissionDeniedError` with a corporate content-filter response body, not an
-auth or quota error). All other recipes still need to be regenerated from an
-unblocked network to fully replace the remaining pre-fix/empty sample output.
+auth or quota error).
+
+### Full 6-recipe run (Groq free tier)
+
+To validate against all 6 scraped recipes without needing a paid OpenAI key,
+free-tier provider support was added to `TweakExtractor` (Groq and Gemini,
+both OpenAI-API-compatible, auto-detected via `GROQ_API_KEY`/`GEMINI_API_KEY`
+env vars). A full run (`openai/gpt-oss-20b` via Groq) produced:
+
+| Recipe | Modifications | Changes |
+|---|---|---|
+| Best Chocolate Chip Cookies | 5 | 5 |
+| Creamy Sweet Potato With Ginger Soup | 10 | 6 |
+| Spicy Apple Cake | 2 | 1 |
+| Nikujaga (Japanese-Style Meat and Potatoes) | 1 | 1 |
+| Spiced Purple Plum Jam | 0 | 0 (no source reviews available) |
+| Mango Teriyaki Marinade | 0 | 0 (no source reviews available) |
+
+The two 0-modification recipes are the correct, honest result of Fix #3
+(graceful empty state) — they have no `featured_tweaks` or
+`has_modification`-flagged reviews in the scraped data, not a pipeline
+failure.
+
+Running this exactly as the README instructed (`cd src && python
+test_pipeline.py all`) surfaced one more bug: `test_pipeline.py` reads
+recipes from an explicit `../data` path but never passed a matching
+`output_dir` to `LLMAnalysisPipeline()`, so it silently used the library's
+`"data/enhanced"` default — which resolves relative to the *current* working
+directory, not the repo root. Every run following the README's own
+instructions was therefore writing output to `src/data/enhanced/` instead of
+the repo-root `data/enhanced/` that the rest of the README and the original
+sample files assume. Fixed by passing `output_dir="../data/enhanced"`
+explicitly, matching the existing `../data` input path, and consolidated the
+two split output locations back into one.
 
 ## Technical Decisions & Rationale
 
