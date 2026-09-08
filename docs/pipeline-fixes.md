@@ -9,12 +9,14 @@ known limitation given the assignment's 4-hour scope.
 - The scraped data in `data/*.json` (5 recipes) is representative but not
   exhaustive — the goal was to find and fix assumptions that only hold for these
   5 recipes, not to hand-tune the pipeline to pass on exactly these 5.
-- No `OPENAI_API_KEY` was available in the working environment, so end-to-end
-  fixes are validated with **mocked LLM responses** built from the *actual* review
-  text in the sample data (see `src/tests/`), rather than by regenerating
-  `data/enhanced/*.json` against the real API. The prompt/schema changes are the
-  same either way — only the "does the real GPT call get it right" question is
-  unverified live.
+- Initial validation used **mocked LLM responses** built from the *actual* review
+  text in the sample data (see `src/tests/`), since no `OPENAI_API_KEY` was
+  available from the primary working environment (its network blocks calls to
+  `api.openai.com` at the proxy level — confirmed directly, not just inferred).
+  A real key was later run against the live OpenAI API from an unblocked network,
+  which regenerated `data/enhanced/enhanced_10813_best-chocolate-chip-cookies.json`
+  and confirmed the fix live (see "Live verification" below) — the mocked tests
+  remain as fast, repeatable regression coverage.
 - "Featured Tweaks" (per the assignment brief) = the `featured_tweaks` field
   already present in the scraped JSON (`is_featured: true`), which is a subset of
   `reviews`. This looks exactly like AllRecipes' own highest-voted/curated tweaks
@@ -162,6 +164,37 @@ asserts exactly 1 `chat.completions.create` call for 2 reviews yielding 4
 modifications; `..._falls_back_per_review_on_batch_failure` proves the resilience
 fallback still works when batching fails.
 
+## Live Verification
+
+The mocked tests prove the extraction logic is structurally correct, but the
+real question is whether the actual OpenAI model, given the real prompt,
+follows the new schema. Once a working API key was available (from a network
+not blocking `api.openai.com`), the fixed pipeline was run for real against
+`data/recipe_10813_best-chocolate-chip-cookies.json`.
+
+Two of the three source reviews used were compound (the exact failure mode
+called out in the assignment brief):
+
+- *"I used an ice cream scoop, that made 16 big cookies. I did add an
+  additional egg yolk to help keep the cookie chewy."* → correctly split into
+  **2** modifications (`technique_change`: ice cream scoop; `addition`: egg
+  yolk), instead of collapsing into one.
+- *"...used a whole cup of white sugar and 1/2 c of brown... and 1/2 c less
+  flour... added a tiny dash of cinnamon..."* → correctly split into **3**
+  modifications (two `quantity_adjustment`s and one `addition`).
+
+Result: **7 modifications extracted from 3 reviews, 10 line-level changes
+applied**, vs. the pre-fix ceiling of exactly 1 modification per run. The
+regenerated output is committed at
+`data/enhanced/enhanced_10813_best-chocolate-chip-cookies.json`.
+
+This run also surfaced a real infrastructure constraint worth documenting:
+the primary working environment used for this assignment blocks outbound
+calls to `api.openai.com` at the network/proxy level (confirmed via a direct
+`PermissionDeniedError` with a corporate content-filter response body, not an
+auth or quota error). All other recipes still need to be regenerated from an
+unblocked network to fully replace the remaining pre-fix/empty sample output.
+
 ## Technical Decisions & Rationale
 
 - **List-of-modifications over a single merged object**: keeps `ModificationObject`
@@ -181,10 +214,11 @@ fallback still works when batching fails.
   dropped" problem via a different code path. Whole-line replace is safe here
   specifically because `find_best_match` already enforces a similarity threshold
   before this branch is reached.
-- **Mocked tests over regenerating real output**: no live API key was available;
-  rather than fabricate "real" LLM output for `data/enhanced/`, tests assert the
-  fix against the actual sample review text with realistic mocked responses. This
-  is called out explicitly rather than silently left ambiguous.
+- **Mocked tests as the primary regression suite, live run as spot-check**:
+  mocked tests stay fast, free, and runnable in CI/offline; a live API run was
+  used once to spot-check that the real model actually follows the new schema
+  (see "Live Verification" above), rather than relying on mocks alone or
+  re-running the live API on every change.
 
 ## Implementation Details & Challenges
 
