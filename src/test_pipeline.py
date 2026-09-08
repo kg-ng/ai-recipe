@@ -31,9 +31,12 @@ def test_single_recipe():
         logger.info("Please set your OpenAI API key in .env file")
         return False
 
-    # Initialize pipeline
+    # Initialize pipeline. output_dir is explicit (not the "data/enhanced"
+    # default) so it always resolves to the repo-root data/enhanced/ dir
+    # regardless of whether this script is invoked from the repo root or
+    # from src/ (this script's own recipe/data paths assume the latter).
     try:
-        pipeline = LLMAnalysisPipeline()
+        pipeline = LLMAnalysisPipeline(output_dir="../data/enhanced")
         logger.info("Pipeline initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize pipeline: {e}")
@@ -81,9 +84,10 @@ def test_all_recipes():
         logger.info("Please set your OpenAI API key in .env file")
         return False
 
-    # Initialize pipeline
+    # Initialize pipeline. See test_single_recipe() for why output_dir is
+    # explicit here.
     try:
-        pipeline = LLMAnalysisPipeline()
+        pipeline = LLMAnalysisPipeline(output_dir="../data/enhanced")
         logger.info("Pipeline initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize pipeline: {e}")

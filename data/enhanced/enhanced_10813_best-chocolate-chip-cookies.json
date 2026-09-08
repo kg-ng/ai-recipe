@@ -5,24 +5,25 @@
   "ingredients": [
     "1 cup butter, softened",
     "1 cup white sugar",
-    "0.5 cup packed brown sugar",
+    "1 cup packed brown sugar",
     "2 eggs",
     "1 egg yolk",
     "2 teaspoons vanilla extract",
     "1 teaspoon baking soda",
     "2 teaspoons hot water",
     "1 teaspoon salt",
-    "1 dash cinnamon",
-    "2.5 cups all-purpose flour",
+    "3 cups all-purpose flour",
     "2 cups semisweet chocolate chips"
   ],
   "instructions": [
     "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
     "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
-    "Beat in eggs and additional egg yolk, one at a time, then stir in vanilla.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
     "Dissolve baking soda in hot water. Add to batter along with salt.",
-    "Stir in flour and chocolate chips.",
-    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press them down slightly.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Press dough slightly before baking.",
+    "Use an ice cream scoop to portion dough into 16 big cookies.",
     "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
     "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
     "Store in an airtight container or serve immediately and enjoy!"
@@ -35,13 +36,13 @@
         "rating": 5
       },
       "modification_type": "technique_change",
-      "reasoning": "Using an ice cream scoop portions the dough consistently into 16 larger cookies.",
+      "reasoning": "Using an ice cream scoop helps portion dough evenly and produce larger cookies.",
       "changes_made": [
         {
           "type": "instruction",
-          "from_text": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
-          "to_text": "Drop dough 2 inches apart onto ungreased baking sheets using an ice cream scoop (makes 16 large cookies).",
-          "operation": "replace"
+          "from_text": "",
+          "to_text": "Use an ice cream scoop to portion dough into 16 big cookies.",
+          "operation": "add"
         }
       ]
     },
@@ -52,19 +53,13 @@
         "rating": 5
       },
       "modification_type": "addition",
-      "reasoning": "Adding an extra egg yolk creates a chewier texture in the baked cookies.",
+      "reasoning": "Adding an egg yolk increases protein and helps keep cookies chewy.",
       "changes_made": [
         {
           "type": "ingredient",
           "from_text": "",
           "to_text": "1 egg yolk",
           "operation": "add"
-        },
-        {
-          "type": "instruction",
-          "from_text": "Beat in eggs, one at a time, then stir in vanilla.",
-          "to_text": "Beat in eggs and additional egg yolk, one at a time, then stir in vanilla.",
-          "operation": "replace"
         }
       ]
     },
@@ -75,7 +70,7 @@
         "rating": 3
       },
       "modification_type": "quantity_adjustment",
-      "reasoning": "Increased the salt amount to 1 teaspoon to improve flavor because the original recipe tasted a bit bland.",
+      "reasoning": "Increase salt to enhance flavor",
       "changes_made": [
         {
           "type": "ingredient",
@@ -92,19 +87,13 @@
         "rating": 3
       },
       "modification_type": "removal",
-      "reasoning": "Omitted walnuts from the recipe.",
+      "reasoning": "Remove nuts to reduce blandness and improve flavor",
       "changes_made": [
         {
           "type": "ingredient",
           "from_text": "1 cup chopped walnuts",
           "to_text": "",
           "operation": "remove"
-        },
-        {
-          "type": "instruction",
-          "from_text": "Stir in flour, chocolate chips, and walnuts.",
-          "to_text": "Stir in flour and chocolate chips.",
-          "operation": "replace"
         }
       ]
     },
@@ -115,83 +104,32 @@
         "rating": 3
       },
       "modification_type": "technique_change",
-      "reasoning": "Pressed the dough down slightly before baking for better cookie shape and texture.",
+      "reasoning": "Pressing dough before baking improves texture and flavor",
       "changes_made": [
         {
           "type": "instruction",
-          "from_text": "Drop dough 2 inches apart onto ungreased baking sheets using an ice cream scoop (makes 16 large cookies).",
-          "to_text": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press them down slightly.",
-          "operation": "replace"
-        }
-      ]
-    },
-    {
-      "source_review": {
-        "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
-        "reviewer": null,
-        "rating": 5
-      },
-      "modification_type": "quantity_adjustment",
-      "reasoning": "Reduced the amount of brown sugar from 1 cup to 1/2 cup because that was all the user had available.",
-      "changes_made": [
-        {
-          "type": "ingredient",
-          "from_text": "1 cup packed brown sugar",
-          "to_text": "0.5 cup packed brown sugar",
-          "operation": "replace"
-        }
-      ]
-    },
-    {
-      "source_review": {
-        "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
-        "reviewer": null,
-        "rating": 5
-      },
-      "modification_type": "quantity_adjustment",
-      "reasoning": "Reduced the flour by 1/2 cup (to 2.5 cups) after reading suggestions from other reviews.",
-      "changes_made": [
-        {
-          "type": "ingredient",
-          "from_text": "3 cups all-purpose flour",
-          "to_text": "2.5 cups all-purpose flour",
-          "operation": "replace"
-        }
-      ]
-    },
-    {
-      "source_review": {
-        "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
-        "reviewer": null,
-        "rating": 5
-      },
-      "modification_type": "addition",
-      "reasoning": "Added a dash of cinnamon to enhance the overall flavor profile.",
-      "changes_made": [
-        {
-          "type": "ingredient",
           "from_text": "",
-          "to_text": "1 dash cinnamon",
+          "to_text": "Press dough slightly before baking.",
           "operation": "add"
         }
       ]
     }
   ],
   "enhancement_summary": {
-    "total_changes": 10,
+    "total_changes": 5,
     "change_types": [
-      "addition",
       "quantity_adjustment",
+      "technique_change",
       "removal",
-      "technique_change"
+      "addition"
     ],
-    "expected_impact": "Using an ice cream scoop portions the dough consistently into 16 larger cookies.; Adding an extra egg yolk creates a chewier texture in the baked cookies.; Increased the salt amount to 1 teaspoon to improve flavor because the original recipe tasted a bit bland. (and 5 more improvements)"
+    "expected_impact": "Using an ice cream scoop helps portion dough evenly and produce larger cookies.; Adding an egg yolk increases protein and helps keep cookies chewy.; Increase salt to enhance flavor (and 2 more improvements)"
   },
   "description": "This classic chocolate chip cookie recipe makes deliciously buttery cookies with crisp edges, chewy middles, and gooey chocolate chips in every bite.",
   "servings": "48",
   "prep_time": null,
   "cook_time": null,
   "total_time": null,
-  "created_at": "2026-09-08T16:20:35.093153",
+  "created_at": "2026-09-08T16:37:41.720066",
   "pipeline_version": "1.0.0"
 }

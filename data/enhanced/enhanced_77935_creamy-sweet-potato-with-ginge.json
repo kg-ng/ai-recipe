@@ -4,18 +4,19 @@
   "title": "Creamy Sweet Potato With Ginger Soup (Community Enhanced)",
   "ingredients": [
     "2 tablespoons olive oil",
-    "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
-    "1 cup roasted Brussels Sprouts, halved; 1 cup roasted bell peppers, diced",
+    "canned yams",
     "1 large onion, cut into large dice",
     "1 tablespoon butter",
     "1 pinch sugar",
     "3 large garlic cloves, thickly sliced",
-    "1.5 teaspoons fresh ginger",
-    "0.5 teaspoon ground nutmeg",
+    "fresh ginger",
+    "1.5 teaspoons fresh grated ginger",
     "0.125 teaspoon cayenne pepper",
+    "extra cayenne pepper",
     "3 cups chicken broth, homemade or from a carton or can",
-    "1.5 cups half-and-half (or whole milk)",
+    "1.5 cups 2% milk",
     "Salt and freshly ground pepper, to taste",
+    "lots of black pepper",
     "Garnish: chopped honey-roasted peanuts"
   ],
   "instructions": [
@@ -34,17 +35,36 @@
         "reviewer": null,
         "rating": 5
       },
-      "modification_type": "addition",
-      "reasoning": "Adding roasted Brussels Sprouts and peppers provides a contrast to the sweet and spicy flavors of the soup, enhancing the overall taste and texture.",
+      "modification_type": "ingredient_substitution",
+      "reasoning": "Using canned yams simplifies prep and offers a different texture.",
       "changes_made": [
         {
           "type": "ingredient",
-          "from_text": "",
-          "to_text": "1 cup roasted Brussels Sprouts, halved; 1 cup roasted bell peppers, diced",
-          "operation": "add"
+          "from_text": "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
+          "to_text": "canned yams",
+          "operation": "replace"
         }
-      ],
-      "confidence_score": 0.85
+      ]
+    },
+    {
+      "source_review": {
+        "text": "I made this with canned yams. I added roasted Brussels Sprouts and peppers. I drizzled heavy cream at the end. Loved the contrast of the roasted greens to the sweet and spicy. Turned out amazing!",
+        "reviewer": null,
+        "rating": 5
+      },
+      "modification_type": "addition",
+      "reasoning": "Adding roasted Brussels Sprouts and peppers provides a savory, roasted contrast.",
+      "changes_made": []
+    },
+    {
+      "source_review": {
+        "text": "I made this with canned yams. I added roasted Brussels Sprouts and peppers. I drizzled heavy cream at the end. Loved the contrast of the roasted greens to the sweet and spicy. Turned out amazing!",
+        "reviewer": null,
+        "rating": 5
+      },
+      "modification_type": "addition",
+      "reasoning": "Drizzling heavy cream at the end adds richness and creaminess.",
+      "changes_made": []
     },
     {
       "source_review": {
@@ -53,32 +73,119 @@
         "rating": 5
       },
       "modification_type": "ingredient_substitution",
-      "reasoning": "Using fresh ginger enhances the ginger flavor in the soup.",
+      "reasoning": "To enhance ginger flavor, fresh ginger is used instead of ground ginger.",
       "changes_made": [
         {
           "type": "ingredient",
           "from_text": "1.5 teaspoons ground ginger",
-          "to_text": "1.5 teaspoons fresh ginger",
+          "to_text": "fresh ginger",
           "operation": "replace"
         }
-      ],
-      "confidence_score": 0.85
+      ]
+    },
+    {
+      "source_review": {
+        "text": "I had one large sweet potato that needed to be used, and 3 white potatoes, so I used those to make this soup. I also substituted 2% milk instead of half-and-half or whole milk. It turned out delicious! I highly recommend it. Thanks for sharing the recipe.",
+        "reviewer": null,
+        "rating": 5
+      },
+      "modification_type": "quantity_adjustment",
+      "reasoning": "Used one large sweet potato instead of 1.5 pounds to match available ingredient.",
+      "changes_made": []
+    },
+    {
+      "source_review": {
+        "text": "Def has a kick! Very thick.. Even w 2% milk- will use more broth next time. Used fresh grated ginger. Hearty and yummy!",
+        "reviewer": null,
+        "rating": 4
+      },
+      "modification_type": "ingredient_substitution",
+      "reasoning": "Swapped half-and-half for 2% milk to reduce fat content while maintaining creaminess.",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "from_text": "1.5 cups half-and-half (or whole milk)",
+          "to_text": "1.5 cups 2% milk",
+          "operation": "replace"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "Def has a kick! Very thick.. Even w 2% milk- will use more broth next time. Used fresh grated ginger. Hearty and yummy!",
+        "reviewer": null,
+        "rating": 4
+      },
+      "modification_type": "ingredient_substitution",
+      "reasoning": "Used fresh grated ginger for a brighter, more aromatic flavor.",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "from_text": "0.5 teaspoon ground nutmeg",
+          "to_text": "1.5 teaspoons fresh grated ginger",
+          "operation": "replace"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "Great soup! The vegetables caramelize beautifully with this method (though I think it would also work fine in the oven, which would take longer but keep my hands free for other things). I added extra cayenne pepper, lots of black pepper, and used heavy cream instead of 1/2 & 1/2; otherwise followed as written. I didn't find it at all too sweet - these are sweet potatoes, after all. Thanks for the recipe!",
+        "reviewer": null,
+        "rating": 4
+      },
+      "modification_type": "addition",
+      "reasoning": "Increase heat and spice",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "from_text": "",
+          "to_text": "extra cayenne pepper",
+          "operation": "add"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "Great soup! The vegetables caramelize beautifully with this method (though I think it would also work fine in the oven, which would take longer but keep my hands free for other things). I added extra cayenne pepper, lots of black pepper, and used heavy cream instead of 1/2 & 1/2; otherwise followed as written. I didn't find it at all too sweet - these are sweet potatoes, after all. Thanks for the recipe!",
+        "reviewer": null,
+        "rating": 4
+      },
+      "modification_type": "addition",
+      "reasoning": "Add more black pepper for flavor",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "from_text": "",
+          "to_text": "lots of black pepper",
+          "operation": "add"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "Great soup! The vegetables caramelize beautifully with this method (though I think it would also work fine in the oven, which would take longer but keep my hands free for other things). I added extra cayenne pepper, lots of black pepper, and used heavy cream instead of 1/2 & 1/2; otherwise followed as written. I didn't find it at all too sweet - these are sweet potatoes, after all. Thanks for the recipe!",
+        "reviewer": null,
+        "rating": 4
+      },
+      "modification_type": "ingredient_substitution",
+      "reasoning": "Use heavy cream for richer, thicker soup",
+      "changes_made": []
     }
   ],
   "enhancement_summary": {
-    "total_changes": 2,
+    "total_changes": 6,
     "change_types": [
+      "quantity_adjustment",
       "ingredient_substitution",
       "addition"
     ],
-    "confidence_score": 0.85,
-    "expected_impact": "Adding roasted Brussels Sprouts and peppers provides a contrast to the sweet and spicy flavors of the soup, enhancing the overall taste and texture.; Using fresh ginger enhances the ginger flavor in the soup."
+    "expected_impact": "Using canned yams simplifies prep and offers a different texture.; Adding roasted Brussels Sprouts and peppers provides a savory, roasted contrast.; Drizzling heavy cream at the end adds richness and creaminess. (and 7 more improvements)"
   },
   "description": "Made with sweet potatoes and seasoned with ginger, nutmeg, and cayenne pepper, this creamy soup is topped with honey-roasted peanuts.",
   "servings": "8",
   "prep_time": null,
   "cook_time": null,
   "total_time": null,
-  "created_at": "2025-09-25T01:21:03.314979",
+  "created_at": "2026-09-08T16:40:58.781365",
   "pipeline_version": "1.0.0"
 }
