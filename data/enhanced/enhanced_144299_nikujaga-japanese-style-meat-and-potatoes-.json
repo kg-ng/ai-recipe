@@ -46,9 +46,31 @@
   },
   "description": "This main dish recipe features sliced beef sirloin cooked with potatoes, and onion in a sauce made with prepared dashi soup, sake, and soy sauce.",
   "servings": "4",
-  "prep_time": null,
-  "cook_time": null,
-  "total_time": null,
+  "prep_time": "PT15M",
+  "cook_time": "PT35M",
+  "total_time": "PT50M",
   "created_at": "2026-09-08T16:37:59.789347",
-  "pipeline_version": "1.0.0"
+  "pipeline_version": "1.0.0",
+  "rating": {
+    "value": "4.6",
+    "count": "20"
+  },
+  "nutrition": {
+    "@type": "NutritionInformation",
+    "calories": "316 kcal",
+    "carbohydrateContent": "48 g",
+    "cholesterolContent": "13 mg",
+    "fiberContent": "6 g",
+    "proteinContent": "14 g",
+    "saturatedFatContent": "2 g",
+    "sodiumContent": "1109 mg",
+    "sugarContent": "9 g",
+    "fatContent": "6 g",
+    "unsaturatedFatContent": "0 g"
+  },
+  "url": "https://www.allrecipes.com/recipe/144299/nikujaga-japanese-style-meat-and-potatoes/",
+  "author": "[{'@type': 'Person', 'name': 'Hinata'}]",
+  "categories": [
+    "Dinner"
+  ]
 }

@@ -37,7 +37,7 @@
         "rating": 5
       },
       "modification_type": "ingredient_substitution",
-      "reasoning": "The reviewer replaced the recipe’s frosting with a different one they had on hand.",
+      "reasoning": "The reviewer replaced the recipe\u2019s frosting with a different one they had on hand.",
       "changes_made": []
     },
     {
@@ -47,7 +47,7 @@
         "rating": 5
       },
       "modification_type": "quantity_adjustment",
-      "reasoning": "The reviewer increased the amount of apples to make the cake more apple‑heavy.",
+      "reasoning": "The reviewer increased the amount of apples to make the cake more apple\u2011heavy.",
       "changes_made": [
         {
           "type": "ingredient",
@@ -64,13 +64,35 @@
       "quantity_adjustment",
       "ingredient_substitution"
     ],
-    "expected_impact": "The reviewer replaced the recipe’s frosting with a different one they had on hand.; The reviewer increased the amount of apples to make the cake more apple‑heavy."
+    "expected_impact": "The reviewer replaced the recipe\u2019s frosting with a different one they had on hand.; The reviewer increased the amount of apples to make the cake more apple\u2011heavy."
   },
   "description": "This delicious spicy apple cake recipe is made with fresh apples, spices, and sugar. It&#39;s a wonderfully perfect treat for the apple harvest season.",
   "servings": "9",
-  "prep_time": null,
-  "cook_time": null,
-  "total_time": null,
+  "prep_time": "PT25M",
+  "cook_time": "PT45M",
+  "total_time": "PT70M",
   "created_at": "2026-09-08T16:38:29.667063",
-  "pipeline_version": "1.0.0"
+  "pipeline_version": "1.0.0",
+  "rating": {
+    "value": "4.7",
+    "count": "79"
+  },
+  "nutrition": {
+    "@type": "NutritionInformation",
+    "calories": "468 kcal",
+    "carbohydrateContent": "71 g",
+    "cholesterolContent": "44 mg",
+    "fiberContent": "2 g",
+    "proteinContent": "5 g",
+    "saturatedFatContent": "5 g",
+    "sodiumContent": "273 mg",
+    "sugarContent": "53 g",
+    "fatContent": "19 g",
+    "unsaturatedFatContent": "0 g"
+  },
+  "url": "https://www.allrecipes.com/recipe/19117/spicy-apple-cake/",
+  "author": "[{'@type': 'Person', 'name': 'Linda'}]",
+  "categories": [
+    "Dessert"
+  ]
 }

@@ -152,6 +152,17 @@ class EnhancedRecipe(BaseModel):
     prep_time: Optional[str] = Field(description="Preparation time")
     cook_time: Optional[str] = Field(description="Cooking time")
     total_time: Optional[str] = Field(description="Total time")
+    rating: Optional[Dict[str, Any]] = Field(
+        default=None, description="Original recipe rating (value/count)"
+    )
+    nutrition: Optional[Dict[str, Any]] = Field(
+        default=None, description="Nutrition facts carried over from the original recipe"
+    )
+    url: Optional[str] = Field(default=None, description="Source URL of the original recipe")
+    author: Optional[str] = Field(default=None, description="Original recipe author")
+    categories: Optional[List[str]] = Field(
+        default=None, description="Recipe categories (e.g. Dessert)"
+    )
 
     # Generation metadata
     created_at: str = Field(description="When this enhanced recipe was created")
@@ -170,6 +181,13 @@ class Recipe(BaseModel):
     description: Optional[str] = None
     servings: Optional[str] = None
     rating: Optional[Dict[str, Any]] = None
+    preptime: Optional[str] = None
+    cooktime: Optional[str] = None
+    totaltime: Optional[str] = None
+    nutrition: Optional[Dict[str, Any]] = None
+    url: Optional[str] = None
+    author: Optional[str] = None
+    categories: Optional[List[str]] = None
     # Include other fields as needed
 
 

@@ -20,9 +20,19 @@
   },
   "description": "Use this sweet and tangy marinade on chicken or pork!",
   "servings": "8",
-  "prep_time": null,
+  "prep_time": "PT10M",
   "cook_time": null,
-  "total_time": null,
+  "total_time": "PT130M",
   "created_at": "2026-09-08T16:41:14.541112",
-  "pipeline_version": "1.0.0"
+  "pipeline_version": "1.0.0",
+  "rating": {
+    "value": "4.3",
+    "count": "12"
+  },
+  "nutrition": null,
+  "url": "https://www.allrecipes.com/recipe/45613/mango-teriyaki-marinade/",
+  "author": "[{'@type': 'Person', 'name': 'Anna Oliva'}]",
+  "categories": [
+    "Condiment"
+  ]
 }

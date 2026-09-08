@@ -94,6 +94,13 @@ class LLMAnalysisPipeline:
             description=recipe_data.get("description"),
             servings=recipe_data.get("servings"),
             rating=recipe_data.get("rating"),
+            preptime=recipe_data.get("preptime"),
+            cooktime=recipe_data.get("cooktime"),
+            totaltime=recipe_data.get("totaltime"),
+            nutrition=recipe_data.get("nutrition"),
+            url=recipe_data.get("url"),
+            author=recipe_data.get("author"),
+            categories=recipe_data.get("categories"),
         )
 
     def parse_reviews_data(self, recipe_data: Dict[str, Any]) -> List[Review]:

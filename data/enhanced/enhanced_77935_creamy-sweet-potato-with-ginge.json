@@ -185,7 +185,29 @@
   "servings": "8",
   "prep_time": null,
   "cook_time": null,
-  "total_time": null,
+  "total_time": "PT0M",
   "created_at": "2026-09-08T16:40:58.781365",
-  "pipeline_version": "1.0.0"
+  "pipeline_version": "1.0.0",
+  "rating": {
+    "value": "4.6",
+    "count": "87"
+  },
+  "nutrition": {
+    "@type": "NutritionInformation",
+    "calories": "194 kcal",
+    "carbohydrateContent": "22 g",
+    "cholesterolContent": "38 mg",
+    "fiberContent": "3 g",
+    "proteinContent": "4 g",
+    "saturatedFatContent": "5 g",
+    "sodiumContent": "91 mg",
+    "sugarContent": "5 g",
+    "fatContent": "11 g",
+    "unsaturatedFatContent": "0 g"
+  },
+  "url": "https://www.allrecipes.com/recipe/77935/creamy-sweet-potato-with-ginger-soup/",
+  "author": "[{'@type': 'Person', 'name': 'USA WEEKEND columnist Pam Anderson'}]",
+  "categories": [
+    "Soup"
+  ]
 }
