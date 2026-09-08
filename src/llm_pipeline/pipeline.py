@@ -94,6 +94,10 @@ class LLMAnalysisPipeline:
             description=recipe_data.get("description"),
             servings=recipe_data.get("servings"),
             rating=recipe_data.get("rating"),
+            # FIX: the fields below (through featured_tweaks) used to be
+            # missing entirely, so this metadata was read from the JSON file
+            # then thrown away here instead of reaching the enhanced output.
+            # See docs/pipeline-fixes.md #8/#9.
             preptime=recipe_data.get("preptime"),
             cooktime=recipe_data.get("cooktime"),
             totaltime=recipe_data.get("totaltime"),

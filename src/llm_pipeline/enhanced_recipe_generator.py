@@ -162,9 +162,20 @@ class EnhancedRecipeGenerator:
             enhancement_summary=enhancement_summary,
             description=original_recipe.description,
             servings=original_recipe.servings,
+            # FIX: prep_time/cook_time/total_time used to be populated via
+            # getattr(original_recipe, "prep_time", None) etc. - those
+            # attribute names never existed on Recipe (which uses
+            # preptime/cooktime/totaltime, matching the raw scraped JSON
+            # keys), so the getattr() fallback silently returned None on
+            # every run. Now reads the correct attribute names directly.
             prep_time=original_recipe.preptime,
             cook_time=original_recipe.cooktime,
             total_time=original_recipe.totaltime,
+            # FIX: rating/nutrition/url/author/categories/featured_tweaks were
+            # not passed through at all before - this metadata (and the raw
+            # featured_tweaks used to audit which tips were considered vs.
+            # applied) was silently dropped from every enhanced recipe. See
+            # docs/pipeline-fixes.md #8/#9.
             rating=original_recipe.rating,
             nutrition=original_recipe.nutrition,
             url=original_recipe.url,

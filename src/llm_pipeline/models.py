@@ -163,6 +163,10 @@ class EnhancedRecipe(BaseModel):
     categories: Optional[List[str]] = Field(
         default=None, description="Recipe categories (e.g. Dessert)"
     )
+    # FIX: these metadata fields (rating/nutrition/url/author/categories) and
+    # featured_tweaks below were previously missing from this model, so
+    # Pydantic silently dropped them from every enhanced recipe even though
+    # the original scraped data had them. See docs/pipeline-fixes.md #8/#9.
     featured_tweaks: Optional[List[Dict[str, Any]]] = Field(
         default=None,
         description="Raw featured_tweaks as scraped from the original recipe - "
@@ -190,6 +194,13 @@ class Recipe(BaseModel):
     description: Optional[str] = None
     servings: Optional[str] = None
     rating: Optional[Dict[str, Any]] = None
+    # FIX: preptime/cooktime/totaltime/nutrition/url/author/categories/
+    # featured_tweaks were previously undeclared here, so the raw scraped
+    # JSON's values for them were silently discarded during parsing before
+    # the enhancement pipeline ever ran (see docs/pipeline-fixes.md #8/#9).
+    # Field names match the raw scraped JSON keys (no underscore) rather than
+    # EnhancedRecipe's prep_time/cook_time/total_time - keep this in mind when
+    # copying values across in enhanced_recipe_generator.py.
     preptime: Optional[str] = None
     cooktime: Optional[str] = None
     totaltime: Optional[str] = None
