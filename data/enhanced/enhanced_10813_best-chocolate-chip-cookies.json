@@ -152,5 +152,31 @@
   "author": "[{'@type': 'Person', 'name': 'Dora'}]",
   "categories": [
     "Dessert"
+  ],
+  "featured_tweaks": [
+    {
+      "text": "I used an ice cream scoop, that made 16 big cookies. I did add an additional egg yolk to help keep the cookie chewy.They turned out fantastic.",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "These are awesome cookies. I followed the advice of others by making the following tweaks: (1) I used a half cup of sugar and one-and-a-half cups of brown sugar; (2) I omitted the water; (3) I added a teaspoon of cream of tartar to the batter; (4) I refrigerated the batter for at least an hour before scooping and baking. The cookies retained their shape and didn't spread when baked. I think the cream of tartar made a difference, and the cookies did not come out too cakey either! This recipe is going in my \"favorites\" cookbook.",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+      "rating": 3,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "I just made these and \ud83d\ude0d\ud83d\ude0b!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    }
   ]
 }

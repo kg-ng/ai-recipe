@@ -163,6 +163,15 @@ class EnhancedRecipe(BaseModel):
     categories: Optional[List[str]] = Field(
         default=None, description="Recipe categories (e.g. Dessert)"
     )
+    featured_tweaks: Optional[List[Dict[str, Any]]] = Field(
+        default=None,
+        description="Raw featured_tweaks as scraped from the original recipe - "
+        "the full set of highest-voted, community-tested tweaks that were "
+        "considered as modification sources. Preserved verbatim (regardless of "
+        "whether each one ended up producing an entry in modifications_applied) "
+        "so consumers can audit which featured tweaks were considered vs. "
+        "actually applied.",
+    )
 
     # Generation metadata
     created_at: str = Field(description="When this enhanced recipe was created")
@@ -188,6 +197,7 @@ class Recipe(BaseModel):
     url: Optional[str] = None
     author: Optional[str] = None
     categories: Optional[List[str]] = None
+    featured_tweaks: Optional[List[Dict[str, Any]]] = None
     # Include other fields as needed
 
 

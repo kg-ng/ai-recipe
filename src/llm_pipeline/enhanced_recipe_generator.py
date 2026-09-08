@@ -170,6 +170,7 @@ class EnhancedRecipeGenerator:
             url=original_recipe.url,
             author=original_recipe.author,
             categories=original_recipe.categories,
+            featured_tweaks=original_recipe.featured_tweaks,
             created_at=datetime.now().isoformat(),
             pipeline_version=self.pipeline_version,
         )

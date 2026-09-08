@@ -101,6 +101,7 @@ class LLMAnalysisPipeline:
             url=recipe_data.get("url"),
             author=recipe_data.get("author"),
             categories=recipe_data.get("categories"),
+            featured_tweaks=recipe_data.get("featured_tweaks"),
         )
 
     def parse_reviews_data(self, recipe_data: Dict[str, Any]) -> List[Review]:

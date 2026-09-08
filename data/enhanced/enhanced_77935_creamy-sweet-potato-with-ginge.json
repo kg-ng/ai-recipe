@@ -209,5 +209,37 @@
   "author": "[{'@type': 'Person', 'name': 'USA WEEKEND columnist Pam Anderson'}]",
   "categories": [
     "Soup"
+  ],
+  "featured_tweaks": [
+    {
+      "text": "I made this with canned yams. I added roasted Brussels Sprouts and peppers. I drizzled heavy cream at the end. Loved the contrast of the roasted greens to the sweet and spicy. Turned out amazing!",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "It was amazing!! The portion is only enough for 2-3 people. Very good as is but when I make it again I will use fresh ginger to give it more of a ginger flavour.",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "I had one large sweet potato that needed to be used, and 3 white potatoes, so I used those to make this soup. I also substituted 2% milk instead of half-and-half or whole milk. It turned out delicious! I highly recommend it. Thanks for sharing the recipe.",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "Def has a kick! Very thick.. Even w 2% milk- will use more broth next time. Used fresh grated ginger. Hearty and yummy!",
+      "rating": 4,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "Great soup! The vegetables caramelize beautifully with this method (though I think it would also work fine in the oven, which would take longer but keep my hands free for other things). I added extra cayenne pepper, lots of black pepper, and used heavy cream instead of 1/2 & 1/2; otherwise followed as written. I didn't find it at all too sweet - these are sweet potatoes, after all. Thanks for the recipe!",
+      "rating": 4,
+      "has_modification": true,
+      "is_featured": true
+    }
   ]
 }

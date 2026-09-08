@@ -94,5 +94,19 @@
   "author": "[{'@type': 'Person', 'name': 'Linda'}]",
   "categories": [
     "Dessert"
+  ],
+  "featured_tweaks": [
+    {
+      "text": "Mmmm, this cake was so good. I made it exactly as directed except I used a different frosting only because I had some leftover from another cake. The next time I make this I will add one more cup of apples because more is better right?!",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "Will make this one again! (maybe for Thanksgiving dessert) I would prefer some more apple chunks in it, but that is just my preference. This cake is sweet and delicious.",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    }
   ]
 }

@@ -72,5 +72,13 @@
   "author": "[{'@type': 'Person', 'name': 'Hinata'}]",
   "categories": [
     "Dinner"
+  ],
+  "featured_tweaks": [
+    {
+      "text": "Overall it was pretty good but the measurements were way off. HAS to be a typo. 1/4lb of meat to serve 4??? I used a lil over 1lb and it even then it was swimming in the broth. After following the recipe, i added extra soy and sugar only because i thought the flavor was a little on the lite side. Overall good.** If you cant find dashi, beef broth/stock works just fine. My japanese mom happen to have some so i was able to get some from her.",
+      "rating": 4,
+      "has_modification": true,
+      "is_featured": true
+    }
   ]
 }
