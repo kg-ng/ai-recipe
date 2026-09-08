@@ -28,6 +28,15 @@ Create a `.env` file in the project root:
 OPENAI_API_KEY=your-openai-api-key-here
 ```
 
+The pipeline also supports free-tier alternatives to OpenAI (useful if you
+don't have paid API credits) — set one of these instead, and the pipeline
+auto-detects it in this priority order:
+
+```env
+GROQ_API_KEY=your-groq-api-key-here      # https://console.groq.com/keys (free, no card)
+GEMINI_API_KEY=your-gemini-api-key-here  # https://aistudio.google.com/apikey (free, no card)
+```
+
 ## Usage
 
 ### 1. Scrape Recipes (Optional - data already provided)
@@ -56,6 +65,23 @@ Enhanced recipes are saved in `src/data/enhanced/`:
 
 - `enhanced_[recipe_id]_[recipe-name].json` - Individual enhanced recipes with modifications applied
 - `pipeline_summary_report.json` - Summary of all processing results
+
+### Latest Run Results
+
+The pipeline was last run against all 6 scraped recipes (via the Groq free tier,
+`openai/gpt-oss-20b`). 4 of 6 recipes had community tweaks available and were
+enhanced; 2 had no `featured_tweaks` or `has_modification`-flagged reviews in
+the scraped data, so they were correctly left unmodified (0 changes) rather
+than the pipeline failing:
+
+| Recipe | Modifications | Changes |
+|---|---|---|
+| Best Chocolate Chip Cookies | 5 | 5 |
+| Creamy Sweet Potato With Ginger Soup | 10 | 6 |
+| Spicy Apple Cake | 2 | 1 |
+| Nikujaga (Japanese-Style Meat and Potatoes) | 1 | 1 |
+| Spiced Purple Plum Jam | 0 | 0 (no source reviews available) |
+| Mango Teriyaki Marinade | 0 | 0 (no source reviews available) |
 
 ### Data Structure
 

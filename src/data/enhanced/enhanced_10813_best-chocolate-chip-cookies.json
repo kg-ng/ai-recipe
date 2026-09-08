@@ -7,14 +7,13 @@
     "1 cup white sugar",
     "1 cup packed brown sugar",
     "2 eggs",
-    "1 additional egg yolk",
+    "1 egg yolk",
     "2 teaspoons vanilla extract",
     "1 teaspoon baking soda",
     "2 teaspoons hot water",
-    "0.5 teaspoon salt",
+    "1 teaspoon salt",
     "3 cups all-purpose flour",
-    "2 cups semisweet chocolate chips",
-    "1 cup chopped walnuts"
+    "2 cups semisweet chocolate chips"
   ],
   "instructions": [
     "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
@@ -23,6 +22,8 @@
     "Dissolve baking soda in hot water. Add to batter along with salt.",
     "Stir in flour, chocolate chips, and walnuts.",
     "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Press dough slightly before baking.",
+    "Use an ice cream scoop to portion dough into 16 big cookies.",
     "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
     "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
     "Store in an airtight container or serve immediately and enjoy!"
@@ -34,30 +35,101 @@
         "reviewer": null,
         "rating": 5
       },
+      "modification_type": "technique_change",
+      "reasoning": "Using an ice cream scoop helps portion dough evenly and produce larger cookies.",
+      "changes_made": [
+        {
+          "type": "instruction",
+          "from_text": "",
+          "to_text": "Use an ice cream scoop to portion dough into 16 big cookies.",
+          "operation": "add"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "I used an ice cream scoop, that made 16 big cookies. I did add an additional egg yolk to help keep the cookie chewy.They turned out fantastic.",
+        "reviewer": null,
+        "rating": 5
+      },
       "modification_type": "addition",
-      "reasoning": "Adding an additional egg yolk helps keep the cookies chewy, improving their texture.",
+      "reasoning": "Adding an egg yolk increases protein and helps keep cookies chewy.",
       "changes_made": [
         {
           "type": "ingredient",
           "from_text": "",
-          "to_text": "1 additional egg yolk",
+          "to_text": "1 egg yolk",
+          "operation": "add"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+        "reviewer": null,
+        "rating": 3
+      },
+      "modification_type": "quantity_adjustment",
+      "reasoning": "Increase salt to enhance flavor",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "from_text": "0.5 teaspoon salt",
+          "to_text": "1 teaspoon salt",
+          "operation": "replace"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+        "reviewer": null,
+        "rating": 3
+      },
+      "modification_type": "removal",
+      "reasoning": "Remove nuts to reduce blandness and improve flavor",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "from_text": "1 cup chopped walnuts",
+          "to_text": "",
+          "operation": "remove"
+        }
+      ]
+    },
+    {
+      "source_review": {
+        "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+        "reviewer": null,
+        "rating": 3
+      },
+      "modification_type": "technique_change",
+      "reasoning": "Pressing dough before baking improves texture and flavor",
+      "changes_made": [
+        {
+          "type": "instruction",
+          "from_text": "",
+          "to_text": "Press dough slightly before baking.",
           "operation": "add"
         }
       ]
     }
   ],
   "enhancement_summary": {
-    "total_changes": 1,
+    "total_changes": 5,
     "change_types": [
+      "quantity_adjustment",
+      "technique_change",
+      "removal",
       "addition"
     ],
-    "expected_impact": "Adding an additional egg yolk helps keep the cookies chewy, improving their texture."
+    "expected_impact": "Using an ice cream scoop helps portion dough evenly and produce larger cookies.; Adding an egg yolk increases protein and helps keep cookies chewy.; Increase salt to enhance flavor (and 2 more improvements)"
   },
   "description": "This classic chocolate chip cookie recipe makes deliciously buttery cookies with crisp edges, chewy middles, and gooey chocolate chips in every bite.",
   "servings": "48",
   "prep_time": null,
   "cook_time": null,
   "total_time": null,
-  "created_at": "2025-09-25T01:38:11.806705",
+  "created_at": "2026-09-08T16:37:41.720066",
   "pipeline_version": "1.0.0"
 }
