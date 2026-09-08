@@ -89,11 +89,31 @@ Original scraped recipes in `data/` directory contain reviews with `has_modifica
 
 The LLM Analysis Pipeline processes recipes in 3 steps:
 
-1. **Tweak Extraction**: Selects one random review with modifications and uses GPT-4o-mini to extract structured changes
-2. **Recipe Modification**: Applies changes to the original recipe using fuzzy string matching
-3. **Enhanced Recipe Generation**: Creates enhanced version with full citation tracking back to source review
+1. **Tweak Extraction**: Sources modifications from the recipe's `featured_tweaks`
+   (AllRecipes' own highest-voted, community-tested tweaks), falling back to any
+   review flagged `has_modification` if a recipe has none scraped. All selected
+   reviews for a recipe are sent through the LLM in a **single batched call**
+   (cost optimization — avoids re-paying for recipe context tokens per review),
+   which returns a **list** of discrete modifications tagged back to their source
+   review — a single review describing several independent changes (e.g. "I
+   added an egg and halved the sugar") is split into separate
+   `addition`/`quantity_adjustment`/etc. objects instead of being merged into one.
+   Falls back to one call per review only if the batch call fails outright.
+2. **Recipe Modification**: Applies every extracted modification sequentially to
+   the recipe using fuzzy string matching, falling back to a whole-line replace
+   when the LLM's `find` text doesn't exactly match the recipe line, and skipping
+   any edit that would produce no real change (no false-positive diffs).
+3. **Enhanced Recipe Generation**: Creates an enhanced version with full citation
+   tracking back to every source review that contributed a change. Recipes with no
+   available community tweaks still produce an `EnhancedRecipe` (0 modifications,
+   explicit message) instead of the pipeline silently failing.
 
-Each run produces one enhanced recipe per original recipe, with complete attribution showing exactly what changed and why.
+Each run produces one enhanced recipe per original recipe — with potentially many
+`modifications_applied` entries per recipe — with complete attribution showing
+exactly what changed and why.
+
+See `docs/pipeline-fixes.md` for the full list of correctness/scale bugs found in
+the original implementation and how each was fixed.
 
 ## Development
 
@@ -101,6 +121,27 @@ Each run produces one enhanced recipe per original recipe, with complete attribu
 # Add dependencies
 uv add <package_name>
 
-# Run tests
-cd src && uv run python test_pipeline.py single
+# Run the manual pipeline harness (needs OPENAI_API_KEY, calls the real LLM)
+cd src && uv run python test_pipeline.py single   # or: all
+
+# Run the automated unit test suite (mocked LLM, no API key required)
+cd src && uv run pytest tests/ -v
 ```
+
+## Agentic System (`.github/`)
+
+This repo includes a Copilot CLI agent/skill setup used while diagnosing and
+fixing the pipeline. See `.github/AGENTS_README.md` for the full breakdown:
+
+- **Agents** (`.github/agents/`): `pipeline-planner` (entry point/orchestrator),
+  `pipeline-qa-reviewer` (verifies multi-tweak extraction, scale, diff
+  correctness), `pipeline-commit`, `pipeline-pr-preparer`, `rubber-duck` (generic
+  logic reviewer).
+- **Skills** (`.github/skills/`): reusable engineering practices — planning,
+  TDD, code review, git workflow, debugging, docs/ADRs, security, doubt-driven
+  development, shipping checklists.
+- **Memory** (`.github/agents/pipeline-lessons.md`): an append-only log of every
+  bug found in this pipeline, its root cause, and the fix applied. Agents read it
+  before planning/reviewing so gaps aren't rediscovered — or silently
+  reintroduced — across sessions. It doubles as a running changelog of the
+  debugging work done in this repo.

@@ -45,6 +45,44 @@ class ModificationObject(BaseModel):
     edits: List[ModificationEdit] = Field(description="List of atomic edits to apply")
 
 
+class ModificationExtractionResult(BaseModel):
+    """
+    Wrapper for LLM extraction output. A single review can describe multiple
+    discrete modifications (e.g. "I added an egg and halved the sugar" is an
+    addition AND a quantity_adjustment). The LLM must return one ModificationObject
+    per discrete, independently-describable change rather than merging everything
+    under one modification_type.
+    """
+
+    modifications: List[ModificationObject] = Field(
+        description="One entry per discrete modification found in the review. "
+        "A compound review describing N independent changes must produce N entries."
+    )
+
+
+class BatchModificationObject(ModificationObject):
+    """
+    A ModificationObject tagged with which input review it came from. Used by the
+    cost-optimized batch extraction path, which sends ALL of a recipe's reviews to
+    the LLM in a single request (instead of one request per review) and asks it to
+    label each returned modification with the index of the review it came from.
+    """
+
+    review_index: int = Field(
+        description="0-based index into the batch's input review list identifying "
+        "which review this modification was extracted from"
+    )
+
+
+class BatchModificationExtractionResult(BaseModel):
+    """Wrapper for the multi-review batch extraction LLM output."""
+
+    modifications: List[BatchModificationObject] = Field(
+        description="One entry per discrete modification found across ALL input "
+        "reviews, each tagged with its source review_index."
+    )
+
+
 class SourceReview(BaseModel):
     """Reference to the original review that suggested the modification."""
 
@@ -142,3 +180,4 @@ class Review(BaseModel):
     rating: Optional[int] = None
     username: Optional[str] = None
     has_modification: bool = False
+    is_featured: bool = False
