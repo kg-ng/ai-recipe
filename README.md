@@ -107,9 +107,22 @@ Original scraped recipes in `data/` directory contain reviews with `has_modifica
     "total_changes": 1,
     "change_types": ["addition"],
     "expected_impact": "Chewier texture and improved consistency"
-  }
+  },
+  "rating": {"value": "4.6", "count": "19353"},
+  "nutrition": {"calories": "146 kcal", "proteinContent": "2 g", ...},
+  "url": "https://www.allrecipes.com/recipe/10813/best-chocolate-chip-cookies/",
+  "author": "[{'@type': 'Person', 'name': 'Dora'}]",
+  "categories": ["Dessert"],
+  "prep_time": "PT20M",
+  "cook_time": "PT10M",
+  "total_time": "PT30M"
 }
 ```
+
+> `rating`, `nutrition`, `url`, `author`, `categories`, and `prep_time`/`cook_time`/`total_time`
+> are carried over unchanged from the original scraped recipe (see
+> [`docs/pipeline-fixes.md`](docs/pipeline-fixes.md#8-original-recipe-metadata-nutrition-rating-etc-was-silently-dropped-medium)
+> for why these were previously dropped and how it was fixed).
 
 ## How It Works
 

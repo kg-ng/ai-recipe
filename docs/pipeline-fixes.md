@@ -189,6 +189,37 @@ stray `src/data/` directory.
 **Proof:** re-ran `python test_pipeline.py all` from `src/` after the fix;
 output landed directly in the repo-root `data/enhanced/` as expected.
 
+### 8. Original recipe metadata (nutrition, rating, etc.) was silently dropped (MEDIUM)
+
+**Found:** the input `Recipe` model only declared `recipe_id`, `title`,
+`ingredients`, `instructions`, `description`, `servings`, and `rating` — Pydantic
+silently drops any JSON key not declared on the model, so `nutrition`, `url`,
+`author`, `categories`, and `preptime`/`cooktime`/`totaltime` from the scraped
+JSON were discarded the moment a recipe was parsed, before enhancement even ran.
+`EnhancedRecipe` didn't declare most of these fields either, so even if they'd
+survived parsing they had nowhere to go in the output. Worse,
+`prep_time`/`cook_time`/`total_time` were populated via
+`getattr(original_recipe, "prep_time", None)` — an attribute name that never
+existed on `Recipe` (which used `preptime`/`cooktime`/`totaltime`), so this
+`getattr` silently resolved to `None` on every run despite looking like it was
+wired up correctly.
+
+**Root cause:** `Recipe` was scoped down to "only what the LLM prompt needs"
+early on and never widened back out for the final output, and a field-name
+mismatch (`prep_time` vs `preptime`) went unnoticed because both sides default
+to `None`/`Optional` with no validation error.
+
+**Fix:** added `preptime`, `cooktime`, `totaltime`, `nutrition`, `url`, `author`,
+`categories` to `Recipe`; added `rating`, `nutrition`, `url`, `author`,
+`categories` to `EnhancedRecipe`. `pipeline.py`'s `parse_recipe_data()` now reads
+all of these from the raw JSON, and `enhanced_recipe_generator.py` passes them
+through unchanged (they're never touched by modification logic) and reads the
+correctly-named `original_recipe.preptime`/`.cooktime`/`.totaltime` instead of
+the nonexistent `prep_time`/`cook_time`/`total_time` attributes. All 6 committed
+`data/enhanced/*.json` sample outputs were backfilled with these fields
+(cross-referenced from their matching `data/recipe_*.json` source) so the
+existing samples match what the fixed pipeline now produces.
+
 ## Live Verification
 
 The mocked tests prove the extraction logic is structurally correct, but the
