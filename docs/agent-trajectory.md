@@ -10,9 +10,9 @@ structured summary (not a raw log export).
 ## 1. Stand up an agentic workflow for this repo
 
 **Ask:** Build/customize an agentic system to support ongoing work on this
-pipeline — agents and skills, callable from the Copilot CLI.
+pipeline — agents and skills, first built for the Copilot CLI and now run from Claude Code.
 
-**What was built (`.github/`):**
+**What was built (now `.claude/`; originally `.github/`):**
 
 - **Agents**
   - `pipeline-planner` — entry point; clarifies intent, maps the request onto
@@ -32,11 +32,11 @@ pipeline — agents and skills, callable from the Copilot CLI.
   communication-style skills. All commands/examples inside were adapted to
   this repo's actual tooling (`uv`, `pytest`, Python) rather than left
   generic.
-- **Memory** — `.github/agents/pipeline-lessons.md`, an append-only log the
+- **Memory** — `docs/pipeline-lessons.md`, an append-only log the
   planner reads before planning and the QA reviewer updates after each
   finding, so bugs and root causes accumulate across sessions instead of
   being rediscovered.
-- **Index** — `.github/AGENTS_README.md` documenting how the pieces fit
+- **Index** — `CLAUDE.md` documenting how the pieces fit
   together.
 
 **Outcome:** confirmed working and ready to use for the actual pipeline

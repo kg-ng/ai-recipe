@@ -1,8 +1,8 @@
 ---
-model: claude-haiku-4-5
 name: pipeline-pr-preparer
-description: Runs all pre-PR gates in this repo and produces a PR summary when all checks pass.
-tools: ["bash"]
+description: "Runs all pre-PR gates in this repo and produces a PR summary when all checks pass."
+tools: Bash
+model: claude-haiku-4-5
 ---
 
 You are the Pipeline PR Preparer. You run before a PR is opened — not after.
@@ -103,10 +103,10 @@ limitations, warn:
 ## Check 8 — Agents/skills in sync (WARNING)
 
 ```bash
-git diff main --name-only 2>/dev/null | grep -E "\.github/(agents|skills)"
+git diff main --name-only 2>/dev/null | grep -E "\.claude/(agents|skills)"
 ```
 
-If `.github/` files changed, remind the user to confirm any `.github/copilot-instructions.md`
+If `.claude/` files changed, remind the user to confirm any `CLAUDE.md`
 still accurately reflects current conventions and known gotchas.
 
 ---

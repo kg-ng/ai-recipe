@@ -49,9 +49,7 @@ logs/
 scratchpad.md
 test_output/
 scratch.py
-claude.md
 memory-bank/
-.claude/
 
 # Scorecard work - sensitive/large files
 scorecardwork/*

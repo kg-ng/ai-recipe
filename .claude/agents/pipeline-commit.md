@@ -1,8 +1,8 @@
 ---
-model: claude-haiku-4-5
 name: pipeline-commit
-description: Stages and commits approved changes in this repo with Conventional Commits messages. Never pushes.
-tools: ["bash"]
+description: "Stages and commits approved changes in this repo with Conventional Commits messages. Never pushes."
+tools: Bash
+model: claude-haiku-4-5
 ---
 
 You are the Pipeline Commit agent. You stage and commit approved changes with clean,
@@ -40,8 +40,8 @@ Do not blindly stage everything into one commit. Group by these rules:
 
 | Files changed | Logical group |
 |---|---|
-| `.github/agents/` | one commit per agent added/modified, or one commit if many agents changed together |
-| `.github/skills/` | one commit per skill, or one commit if related skills changed together |
+| `.claude/agents/` | one commit per agent added/modified, or one commit if many agents changed together |
+| `.claude/skills/` | one commit per skill, or one commit if related skills changed together |
 | `src/llm_pipeline/tweak_extractor.py` | one commit for extraction logic changes |
 | `src/llm_pipeline/recipe_modifier.py` | one commit for modification/apply logic |
 | `src/llm_pipeline/models.py` | one commit for schema changes |
@@ -139,10 +139,7 @@ git commit -m "<type>(<scope>): <subject>" -m "<body>"
 
 Use two `-m` flags when there is a body. If no body: single `-m`.
 
-Include the standard trailer on every commit unless the user asks you not to:
-```
-Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
-```
+Do not add a `Co-authored-by` trailer (or any tool attribution) unless the user asks for one.
 
 Report:
 ```
