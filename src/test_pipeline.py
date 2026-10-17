@@ -6,13 +6,19 @@ This script tests the complete 3-step pipeline with support for both single reci
 testing and full recipe directory validation.
 
 Usage:
-    python test_pipeline.py single    # Test single chocolate chip cookie recipe
-    python test_pipeline.py all       # Test all recipes in data directory
+    python test_pipeline.py single    # Run the single chocolate chip cookie recipe
+    python test_pipeline.py all       # Run all recipes in the data directory
+
+Under pytest, the live tests below only run when RUN_LIVE_LLM_TESTS=1 and an LLM API
+key is set, because they call a real (possibly paid) provider. They write to a temp
+directory, never to the tracked data/enhanced/ files.
 """
 
 import os
 import sys
 from pathlib import Path
+
+import pytest
 from dotenv import load_dotenv
 
 from llm_pipeline.pipeline import LLMAnalysisPipeline
@@ -21,39 +27,42 @@ from loguru import logger
 # Load environment variables from .env file
 load_dotenv()
 
+REPO_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = REPO_ROOT / "data"
+DEFAULT_OUTPUT_DIR = DATA_DIR / "enhanced"
+LLM_KEY_VARS = ("OPENAI_API_KEY", "GROQ_API_KEY", "GEMINI_API_KEY")
 
-def test_single_recipe():
-    """Test the pipeline with the chocolate chip cookie recipe."""
 
-    # Check for OpenAI API key
-    if not os.getenv("OPENAI_API_KEY"):
-        logger.error("OPENAI_API_KEY environment variable not set")
-        logger.info("Please set your OpenAI API key in .env file")
+def has_llm_key() -> bool:
+    """True if any supported LLM provider key is configured."""
+    return any(os.getenv(name) for name in LLM_KEY_VARS)
+
+
+def run_single_recipe(output_dir: Path = DEFAULT_OUTPUT_DIR) -> bool:
+    """Run the pipeline on the chocolate chip cookie recipe. Returns True on success."""
+
+    if not has_llm_key():
+        logger.error(f"No LLM API key set (looked for: {', '.join(LLM_KEY_VARS)})")
+        logger.info("Please set one in a .env file")
         return False
 
-    # Initialize pipeline. output_dir is explicit (not the "data/enhanced"
-    # default) so it always resolves to the repo-root data/enhanced/ dir
-    # regardless of whether this script is invoked from the repo root or
-    # from src/ (this script's own recipe/data paths assume the latter).
     try:
-        pipeline = LLMAnalysisPipeline(output_dir="../data/enhanced")
+        pipeline = LLMAnalysisPipeline(output_dir=str(output_dir))
         logger.info("Pipeline initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize pipeline: {e}")
         return False
 
-    # Test with chocolate chip cookie recipe
-    recipe_file = "../data/recipe_10813_best-chocolate-chip-cookies.json"
-    if not Path(recipe_file).exists():
+    recipe_file = DATA_DIR / "recipe_10813_best-chocolate-chip-cookies.json"
+    if not recipe_file.exists():
         logger.error(f"Recipe file not found: {recipe_file}")
         return False
 
     logger.info(f"Testing with recipe file: {recipe_file}")
 
     try:
-        # Process the recipe
         enhanced_recipe = pipeline.process_single_recipe(
-            recipe_file=recipe_file,
+            recipe_file=str(recipe_file),
             save_output=True
         )
 
@@ -75,31 +84,24 @@ def test_single_recipe():
         return False
 
 
-def test_all_recipes():
-    """Test the pipeline with all scraped recipes."""
+def run_all_recipes(output_dir: Path = DEFAULT_OUTPUT_DIR) -> bool:
+    """Run the pipeline on every scraped recipe. Returns True if at least one was enhanced."""
 
-    # Check for OpenAI API key
-    if not os.getenv("OPENAI_API_KEY"):
-        logger.error("OPENAI_API_KEY environment variable not set")
-        logger.info("Please set your OpenAI API key in .env file")
+    if not has_llm_key():
+        logger.error(f"No LLM API key set (looked for: {', '.join(LLM_KEY_VARS)})")
+        logger.info("Please set one in a .env file")
         return False
 
-    # Initialize pipeline. See test_single_recipe() for why output_dir is
-    # explicit here.
     try:
-        pipeline = LLMAnalysisPipeline(output_dir="../data/enhanced")
+        pipeline = LLMAnalysisPipeline(output_dir=str(output_dir))
         logger.info("Pipeline initialized successfully")
     except Exception as e:
         logger.error(f"Failed to initialize pipeline: {e}")
         return False
 
     try:
-        # Process all recipes
-        enhanced_recipes = pipeline.process_recipe_directory(
-            data_dir="../data"
-        )
+        enhanced_recipes = pipeline.process_recipe_directory(data_dir=str(DATA_DIR))
 
-        # Generate summary report
         report_path = pipeline.save_summary_report(enhanced_recipes)
 
         logger.info(f"\n{'=' * 60}")
@@ -116,14 +118,42 @@ def test_all_recipes():
         return False
 
 
+live_llm = pytest.mark.skipif(
+    not (has_llm_key() and os.getenv("RUN_LIVE_LLM_TESTS") == "1"),
+    reason="live LLM test: set RUN_LIVE_LLM_TESTS=1 and an LLM API key to run",
+)
+
+
+@live_llm
+def test_single_recipe_live(tmp_path):
+    assert run_single_recipe(output_dir=tmp_path)
+    assert list(tmp_path.glob("enhanced_10813_*.json")), "no enhanced recipe file was written"
+
+
+@live_llm
+def test_all_recipes_live(tmp_path):
+    assert run_all_recipes(output_dir=tmp_path)
+    assert (tmp_path / "pipeline_summary_report.json").exists()
+
+
+def test_run_single_recipe_fails_without_a_key(monkeypatch, tmp_path):
+    """Without a key the helper must report failure, not pretend to pass."""
+    for name in LLM_KEY_VARS:
+        monkeypatch.delenv(name, raising=False)
+
+    assert run_single_recipe(output_dir=tmp_path) is False
+    assert run_all_recipes(output_dir=tmp_path) is False
+    assert list(tmp_path.iterdir()) == []
+
+
 def main():
     """Main test function with mode selection."""
 
     # Parse command line argument
     if len(sys.argv) < 2:
         logger.error("Usage: python test_pipeline.py [single|all]")
-        logger.info("  single - Test single chocolate chip cookie recipe")
-        logger.info("  all    - Test all recipes in data directory")
+        logger.info("  single - Run single chocolate chip cookie recipe")
+        logger.info("  all    - Run all recipes in data directory")
         sys.exit(1)
 
     mode = sys.argv[1].lower()
@@ -131,7 +161,7 @@ def main():
     if mode == "single":
         logger.info("Starting LLM Analysis Pipeline - Single Recipe Test")
         logger.info("=" * 60)
-        success = test_single_recipe()
+        success = run_single_recipe()
 
         logger.info("=" * 60)
         if success:
@@ -144,7 +174,7 @@ def main():
     elif mode == "all":
         logger.info("Starting LLM Analysis Pipeline - All Recipes Validation")
         logger.info("=" * 60)
-        success = test_all_recipes()
+        success = run_all_recipes()
 
         logger.info("=" * 60)
         if success:
