@@ -1,7 +1,7 @@
 ---
 name: Pipeline QA Reviewer
 description: Read-only reviewer for the recipe-tweak pipeline. Use before considering any change complete — checks that tweak extraction captures ALL discrete modifications in a review, that the pipeline doesn't rely on assumptions that only hold for the 5 sample recipes, and that the pipeline actually runs end-to-end.
-tools: ['search', 'runCommands']
+tools: ["read", "search", "execute"]
 disable-model-invocation: true
 ---
 
