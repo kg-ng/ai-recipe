@@ -7,7 +7,7 @@ description: >
   and skills to execute the work. Use this as the entry point when unsure which
   agent to call, or when a task spans multiple agents (e.g. fix tweak extraction +
   add tests + QA + commit).
-tools: ["read_file", "list_dir", "search_files", "bash", "create_file", "replace_in_file"]
+tools: ["read", "search", "execute", "edit", "agent"]
 handoffs:
   - label: Run pipeline QA review
     agent: pipeline-qa-reviewer
