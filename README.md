@@ -45,6 +45,15 @@ GEMINI_API_KEY=your-gemini-api-key-here  # https://aistudio.google.com/apikey (f
 uv run python src/scraper_v2.py
 ```
 
+The scraper identifies itself (`SCRAPER_USER_AGENT` overrides it), times out after 15 seconds, and waits
+1.5 seconds between recipes (`SCRAPE_DELAY_SECONDS`). Check the site's terms and `robots.txt` before running it.
+
+> **About the data in `data/`:** it is recipe and review text scraped from AllRecipes.com for a coursework
+> project, kept here only so the pipeline and the evals can be reproduced. It is not licensed for reuse or
+> redistribution, and the authors of the reviews retain their rights. If you own content here and want it
+> removed, open an issue. For anything beyond coursework, replace it with data you have the right to use;
+> the golden set in `src/evals/` points at reviews by index and a text prefix, so it would need relabeling.
+
 ### 2. Run Recipe Enhancement Pipeline
 
 ```bash

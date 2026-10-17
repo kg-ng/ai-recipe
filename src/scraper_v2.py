@@ -12,6 +12,10 @@ from bs4 import BeautifulSoup
 REQUEST_TIMEOUT_SECONDS = 15
 DELAY_BETWEEN_REQUESTS_SECONDS = float(os.getenv("SCRAPE_DELAY_SECONDS", "1.5"))
 
+# Identify the scraper honestly instead of posing as a browser. If a site blocks it, that is the
+# site's answer; override with SCRAPER_USER_AGENT only if you have permission to do so.
+USER_AGENT = os.getenv("SCRAPER_USER_AGENT", "ai-recipe-research-scraper (+https://github.com/kg-ng/ai-recipe)")
+
 
 def extract_review_data(review_elem) -> Dict:
     """Extract review/tweak data from a review element"""
@@ -130,10 +134,7 @@ def scrape_allrecipes(url: str) -> Optional[Dict]:
         Dictionary containing recipe data or None if scraping fails
     """
     try:
-        # Send request with headers to avoid blocking
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        }
+        headers = {"User-Agent": USER_AGENT}
         response = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
 
@@ -356,9 +357,7 @@ def scrape_sitemap_recipes(limit: int = 50) -> List[str]:
     sitemap_url = "https://www.allrecipes.com/sitemap_1.xml"
 
     try:
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
+        headers = {"User-Agent": USER_AGENT}
         response = requests.get(sitemap_url, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
 
