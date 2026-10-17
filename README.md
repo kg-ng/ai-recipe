@@ -232,19 +232,19 @@ and turned `packed brown sugar` into `1 cup 1.5 cups packed brown sugar`.
 The golden set is tied to the committed `data/` files by a text prefix per review, so a re-scrape that
 changes a review fails `test_golden_set_matches_committed_data` instead of silently mislabeling it.
 
-## Agentic System (`.github/`)
+## Agentic System (`.claude/`)
 
-This repo includes a Copilot CLI agent/skill setup used while diagnosing and
-fixing the pipeline. See `.github/AGENTS_README.md` for the full breakdown:
+This repo includes an agent/skill setup (first built for the Copilot CLI, now Claude Code) used while diagnosing and
+fixing the pipeline. See `CLAUDE.md` for the full breakdown:
 
-- **Agents** (`.github/agents/`): `pipeline-planner` (entry point/orchestrator),
+- **Agents** (`.claude/agents/`): `pipeline-planner` (entry point/orchestrator),
   `pipeline-qa-reviewer` (verifies multi-tweak extraction, scale, diff
   correctness), `pipeline-commit`, `pipeline-pr-preparer`, `rubber-duck` (generic
   logic reviewer).
-- **Skills** (`.github/skills/`): reusable engineering practices — planning,
+- **Skills** (`.claude/skills/`): reusable engineering practices — planning,
   TDD, code review, git workflow, debugging, docs/ADRs, security, doubt-driven
   development, shipping checklists.
-- **Memory** (`.github/agents/pipeline-lessons.md`): an append-only log of every
+- **Memory** (`docs/pipeline-lessons.md`): an append-only log of every
   bug found in this pipeline, its root cause, and the fix applied. Agents read it
   before planning/reviewing so gaps aren't rediscovered — or silently
   reintroduced — across sessions. It doubles as a running changelog of the

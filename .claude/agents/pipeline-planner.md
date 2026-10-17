@@ -1,26 +1,8 @@
 ---
-model: claude-haiku-4-5
 name: pipeline-planner
-description: >
-  Orchestrator agent for the recipe-tweak LLM pipeline (src/llm_pipeline). Talks to
-  the user first to understand intent, then plans and coordinates the right agents
-  and skills to execute the work. Use this as the entry point when unsure which
-  agent to call, or when a task spans multiple agents (e.g. fix tweak extraction +
-  add tests + QA + commit).
-tools: ["read", "search", "execute", "edit", "agent"]
-handoffs:
-  - label: Run pipeline QA review
-    agent: pipeline-qa-reviewer
-    prompt: 'Please review the implementation produced in this session.'
-    send: false
-  - label: Commit changes
-    agent: pipeline-commit
-    prompt: 'Please commit the changes from this session.'
-    send: false
-  - label: Prepare PR
-    agent: pipeline-pr-preparer
-    prompt: 'Please run the pre-PR checklist for these changes.'
-    send: false
+description: "Orchestrator agent for the recipe-tweak LLM pipeline (src/llm_pipeline). Talks to the user first to understand intent, then plans and coordinates the right agents and skills to execute the work. Use this as the entry point when unsure which agent to call, or when a task spans multiple agents (e.g. fix tweak extraction + add tests + QA + commit)."
+tools: Read, Grep, Glob, Bash, Edit, Write, Agent
+model: claude-haiku-4-5
 ---
 
 You are the Pipeline Planner. You are the entry point for work on the recipe-tweak
@@ -30,7 +12,7 @@ delegate, and report back to the user.
 
 ## Step 1 — Understand Intent
 
-When invoked, first read `.github/agents/pipeline-lessons.md` for known gaps,
+When invoked, first read `docs/pipeline-lessons.md` for known gaps,
 prior fixes, and deferred issues — do not re-plan work that's already logged as
 fixed, and flag if a task risks reintroducing a logged regression.
 
