@@ -1,0 +1,728 @@
+{
+ "version": 1,
+ "note": "Expected results are what a careful cook would want, not what the code currently does. 'silent_wrong_edit' means a line changed but not the intended one.",
+ "cases": [
+  {
+   "id": "replace_exact_line",
+   "description": "find is the full line verbatim",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "1 cup white sugar",
+    "replace": "0.5 cup white sugar"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "0.5 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "replace_paraphrased_line",
+   "description": "find paraphrases the line ('of' added)",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "1 cup of white sugar",
+    "replace": "0.5 cup white sugar"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "0.5 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "replace_brown_sugar_fragment",
+   "description": "find is a fragment that only matches the brown sugar line",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "packed brown sugar",
+    "replace": "1.5 cups packed brown sugar"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1.5 cups packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "replace_ambiguous_sugar",
+   "description": "find 'sugar' fits two lines equally; the safe outcome is no change",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "sugar",
+    "replace": "0.5 cup sugar"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "remove_exact_line",
+   "description": "remove a line quoted verbatim",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "remove",
+    "find": "2 teaspoons hot water"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "remove_short_fragment",
+   "description": "'omitted the water' becomes find='water'",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "remove",
+    "find": "water"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "add_after_flour",
+   "description": "insert a new ingredient after a quoted line",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "add_after",
+    "find": "3 cups all-purpose flour",
+    "add": "1 dash ground cinnamon"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "1 dash ground cinnamon",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "instruction_substring_edit",
+   "description": "find is an exact phrase inside a long instruction",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "instructions",
+    "operation": "replace",
+    "find": "about 10 minutes",
+    "replace": "about 12 minutes"
+   },
+   "expected": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 12 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ]
+  },
+  {
+   "id": "replace_case_insensitive",
+   "description": "find differs from the line only in case",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "1 CUP WHITE SUGAR",
+    "replace": "0.5 cup white sugar"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "0.5 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "duplicate_name_picks_exact_line",
+   "description": "two shortening lines; find quotes the frosting one exactly",
+   "ingredients": [
+    "1.5 cups all-purpose flour",
+    "1 teaspoon ground cinnamon",
+    "1 teaspoon baking powder",
+    "0.5 teaspoon baking soda",
+    "0.5 teaspoon salt",
+    "0.5 teaspoon ground nutmeg",
+    "1 cup brown sugar",
+    "0.5 cup shortening",
+    "0.25 cup white sugar",
+    "2 eggs",
+    "1 teaspoon vanilla extract",
+    "0.5 cup milk",
+    "2 cups apple - peeled, cored, and chopped",
+    "2 cups sifted confectioners' sugar",
+    "0.25 cup shortening",
+    "0.25 teaspoon ground cinnamon",
+    "1 pinch ground nutmeg",
+    "0.25 cup evaporated milk"
+   ],
+   "instructions": [
+    "Preheat the oven to 350 degrees F (175 degrees C). Grease and flour a 9-inch square pan.",
+    "Sift together flour, 1 teaspoon cinnamon, baking powder, baking soda, salt, and nutmeg. Set aside.",
+    "Cream brown sugar, 1/2 cup shortening, and white sugar together in a large bowl until light and fluffy. Beat in eggs one at a time, then stir in vanilla. Beat in flour mixture alternately with milk, mixing until just combined. Stir in chopped apples.",
+    "Spread batter evenly in the prepared pan. Bake in the preheated oven until a toothpick inserted into the center of cake comes out clean, 35 to 40 minutes. Let cool.",
+    "Combine confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake."
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "0.25 cup shortening",
+    "replace": "0.25 cup butter"
+   },
+   "expected": [
+    "1.5 cups all-purpose flour",
+    "1 teaspoon ground cinnamon",
+    "1 teaspoon baking powder",
+    "0.5 teaspoon baking soda",
+    "0.5 teaspoon salt",
+    "0.5 teaspoon ground nutmeg",
+    "1 cup brown sugar",
+    "0.5 cup shortening",
+    "0.25 cup white sugar",
+    "2 eggs",
+    "1 teaspoon vanilla extract",
+    "0.5 cup milk",
+    "2 cups apple - peeled, cored, and chopped",
+    "2 cups sifted confectioners' sugar",
+    "0.25 cup butter",
+    "0.25 teaspoon ground cinnamon",
+    "1 pinch ground nutmeg",
+    "0.25 cup evaporated milk"
+   ]
+  },
+  {
+   "id": "duplicate_name_ambiguous",
+   "description": "find 'shortening' fits two lines; the safe outcome is no change",
+   "ingredients": [
+    "1.5 cups all-purpose flour",
+    "1 teaspoon ground cinnamon",
+    "1 teaspoon baking powder",
+    "0.5 teaspoon baking soda",
+    "0.5 teaspoon salt",
+    "0.5 teaspoon ground nutmeg",
+    "1 cup brown sugar",
+    "0.5 cup shortening",
+    "0.25 cup white sugar",
+    "2 eggs",
+    "1 teaspoon vanilla extract",
+    "0.5 cup milk",
+    "2 cups apple - peeled, cored, and chopped",
+    "2 cups sifted confectioners' sugar",
+    "0.25 cup shortening",
+    "0.25 teaspoon ground cinnamon",
+    "1 pinch ground nutmeg",
+    "0.25 cup evaporated milk"
+   ],
+   "instructions": [
+    "Preheat the oven to 350 degrees F (175 degrees C). Grease and flour a 9-inch square pan.",
+    "Sift together flour, 1 teaspoon cinnamon, baking powder, baking soda, salt, and nutmeg. Set aside.",
+    "Cream brown sugar, 1/2 cup shortening, and white sugar together in a large bowl until light and fluffy. Beat in eggs one at a time, then stir in vanilla. Beat in flour mixture alternately with milk, mixing until just combined. Stir in chopped apples.",
+    "Spread batter evenly in the prepared pan. Bake in the preheated oven until a toothpick inserted into the center of cake comes out clean, 35 to 40 minutes. Let cool.",
+    "Combine confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake."
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "shortening",
+    "replace": "butter"
+   },
+   "expected": [
+    "1.5 cups all-purpose flour",
+    "1 teaspoon ground cinnamon",
+    "1 teaspoon baking powder",
+    "0.5 teaspoon baking soda",
+    "0.5 teaspoon salt",
+    "0.5 teaspoon ground nutmeg",
+    "1 cup brown sugar",
+    "0.5 cup shortening",
+    "0.25 cup white sugar",
+    "2 eggs",
+    "1 teaspoon vanilla extract",
+    "0.5 cup milk",
+    "2 cups apple - peeled, cored, and chopped",
+    "2 cups sifted confectioners' sugar",
+    "0.25 cup shortening",
+    "0.25 teaspoon ground cinnamon",
+    "1 pinch ground nutmeg",
+    "0.25 cup evaporated milk"
+   ]
+  },
+  {
+   "id": "replace_with_parenthetical",
+   "description": "line has a parenthetical; find quotes it exactly",
+   "ingredients": [
+    "2 tablespoons olive oil",
+    "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
+    "1 large onion, cut into large dice",
+    "1 tablespoon butter",
+    "1 pinch sugar",
+    "3 large garlic cloves, thickly sliced",
+    "1.5 teaspoons ground ginger",
+    "0.5 teaspoon ground nutmeg",
+    "0.125 teaspoon cayenne pepper",
+    "3 cups chicken broth, homemade or from a carton or can",
+    "1.5 cups half-and-half (or whole milk)",
+    "Salt and freshly ground pepper, to taste",
+    "Garnish: chopped honey-roasted peanuts"
+   ],
+   "instructions": [
+    "Gather the ingredients.",
+    "Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes.",
+    "Reduce heat to low and add butter, sugar and garlic; continue cooking until all vegetables are a rich spotty caramel color, about 10 minutes longer.",
+    "Add ginger, nutmeg and cayenne pepper; continue to saute until fragrant, 30 seconds to 1 minute longer.",
+    "Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes.",
+    "Using an immersion blender or traditional blender, puree until very smooth, 30 seconds to 1 minute. (If using a traditional blender, vent it either by removing the lid&#39;s pop-out center or by lifting one edge of the lid. Drape the blender canister with a kitchen towel. To &#39;clean&#39; the canister, pour in a little half-and-half, blend briefly, then add to the soup.)",
+    "Return to pan (or a soup pot); add enough half-and-half so the mixture is souplike, yet thick enough to float garnish. Taste, and add salt and pepper if needed. Heat through, ladle into bowls, garnish and serve."
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "1.5 cups half-and-half (or whole milk)",
+    "replace": "1.5 cups 2% milk"
+   },
+   "expected": [
+    "2 tablespoons olive oil",
+    "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
+    "1 large onion, cut into large dice",
+    "1 tablespoon butter",
+    "1 pinch sugar",
+    "3 large garlic cloves, thickly sliced",
+    "1.5 teaspoons ground ginger",
+    "0.5 teaspoon ground nutmeg",
+    "0.125 teaspoon cayenne pepper",
+    "3 cups chicken broth, homemade or from a carton or can",
+    "1.5 cups 2% milk",
+    "Salt and freshly ground pepper, to taste",
+    "Garnish: chopped honey-roasted peanuts"
+   ]
+  },
+  {
+   "id": "replace_wrong_target_text",
+   "description": "find matches nothing in the recipe; nothing should change",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "3 tablespoons maple syrup",
+    "replace": "2 tablespoons maple syrup"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "replace_bare_name_with_quantity",
+   "description": "'salt' -> '1 teaspoon salt' means: change the quantity on the salt line",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "replace",
+    "find": "salt",
+    "replace": "1 teaspoon salt"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "1 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  },
+  {
+   "id": "add_after_ambiguous_anchor",
+   "description": "anchor 'sugar' fits two lines; adding after a guessed one would misplace the new ingredient",
+   "ingredients": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ],
+   "instructions": [
+    "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
+    "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+    "Beat in eggs, one at a time, then stir in vanilla.",
+    "Dissolve baking soda in hot water. Add to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts.",
+    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+    "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
+    "Store in an airtight container or serve immediately and enjoy!"
+   ],
+   "edit": {
+    "target": "ingredients",
+    "operation": "add_after",
+    "find": "sugar",
+    "add": "1 teaspoon cream of tartar"
+   },
+   "expected": [
+    "1 cup butter, softened",
+    "1 cup white sugar",
+    "1 cup packed brown sugar",
+    "2 eggs",
+    "2 teaspoons vanilla extract",
+    "1 teaspoon baking soda",
+    "2 teaspoons hot water",
+    "0.5 teaspoon salt",
+    "3 cups all-purpose flour",
+    "2 cups semisweet chocolate chips",
+    "1 cup chopped walnuts"
+   ]
+  }
+ ]
+}
