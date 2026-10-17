@@ -1,10 +1,16 @@
 import json
+import os
 import re
+import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 import requests
 from bs4 import BeautifulSoup
+
+# A request with no timeout can hang the whole run forever; the delay keeps the scraper polite.
+REQUEST_TIMEOUT_SECONDS = 15
+DELAY_BETWEEN_REQUESTS_SECONDS = float(os.getenv("SCRAPE_DELAY_SECONDS", "1.5"))
 
 
 def extract_review_data(review_elem) -> Dict:
@@ -128,7 +134,7 @@ def scrape_allrecipes(url: str) -> Optional[Dict]:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
         }
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
 
         soup = BeautifulSoup(response.content, "html.parser")
@@ -353,7 +359,7 @@ def scrape_sitemap_recipes(limit: int = 50) -> List[str]:
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         }
-        response = requests.get(sitemap_url, headers=headers)
+        response = requests.get(sitemap_url, headers=headers, timeout=REQUEST_TIMEOUT_SECONDS)
         response.raise_for_status()
 
         # Parse XML to find recipe URLs
@@ -425,6 +431,8 @@ def main():
 
     successful = 0
     for i, url in enumerate(recipe_urls, 1):
+        if i > 1:
+            time.sleep(DELAY_BETWEEN_REQUESTS_SECONDS)
         print(f"\n[{i}/{len(recipe_urls)}] Scraping: {url}")
         recipe_data = scrape_allrecipes(url)
         if recipe_data:
