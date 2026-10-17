@@ -59,3 +59,51 @@ def test_replace_that_would_produce_no_change_is_not_recorded():
 
     assert modified == content
     assert records == []
+
+
+# ---- matching: containment first, refuse ambiguity (found by src/evals, see evals/golden_modifier.json) ----
+
+def test_phrase_quoted_from_a_long_line_is_found():
+    """The prompt's own example uses find='about 10 minutes' inside a long instruction.
+    Fuzzy similarity alone scores that far below the threshold, so the edit was silently dropped."""
+    rm = RecipeModifier()
+    edit = ModificationEdit(target="instructions", operation="replace", find="about 10 minutes", replace="about 8-9 minutes")
+    content = ["Preheat the oven.", "Bake in the preheated oven until edges are nicely browned, about 10 minutes."]
+    modified, records = rm.apply_edit(edit, content)
+
+    assert modified[1] == "Bake in the preheated oven until edges are nicely browned, about 8-9 minutes."
+    assert len(records) == 1
+
+
+def test_find_that_fits_two_lines_is_refused_not_guessed():
+    rm = RecipeModifier()
+    edit = ModificationEdit(target="ingredients", operation="replace", find="shortening", replace="butter")
+    content = ["0.5 cup shortening", "0.25 cup shortening"]
+    modified, records = rm.apply_edit(edit, content)
+
+    assert modified == content
+    assert records == []
+
+
+def test_exact_line_wins_over_a_similar_line():
+    rm = RecipeModifier()
+    edit = ModificationEdit(target="ingredients", operation="replace", find="0.25 cup shortening", replace="0.25 cup butter")
+    modified, _ = rm.apply_edit(edit, ["0.5 cup shortening", "0.25 cup shortening"])
+
+    assert modified == ["0.5 cup shortening", "0.25 cup butter"]
+
+
+def test_fragment_find_with_a_full_line_replacement_does_not_nest_quantities():
+    rm = RecipeModifier()
+    edit = ModificationEdit(target="ingredients", operation="replace", find="packed brown sugar", replace="1.5 cups packed brown sugar")
+    modified, _ = rm.apply_edit(edit, ["1 cup white sugar", "1 cup packed brown sugar"])
+
+    assert modified == ["1 cup white sugar", "1.5 cups packed brown sugar"]
+
+
+def test_fragment_find_with_a_fragment_replacement_still_edits_in_place():
+    rm = RecipeModifier()
+    edit = ModificationEdit(target="ingredients", operation="replace", find="white sugar", replace="brown sugar")
+    modified, _ = rm.apply_edit(edit, ["1 cup white sugar", "2 eggs"])
+
+    assert modified == ["1 cup brown sugar", "2 eggs"]

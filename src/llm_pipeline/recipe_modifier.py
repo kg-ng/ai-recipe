@@ -6,6 +6,7 @@ It takes ModificationObject instances and applies their edits to recipe ingredie
 """
 
 import copy
+import re
 from difflib import SequenceMatcher
 from typing import List, Optional, Tuple
 
@@ -21,6 +22,9 @@ from .models import (
 
 class RecipeModifier:
     """Applies structured modifications to recipes using search-and-replace operations."""
+
+    # If the best fuzzy match beats the runner-up by less than this, the edit is refused as ambiguous.
+    AMBIGUITY_MARGIN = 0.05
 
     def __init__(self, similarity_threshold: float = 0.6):
         """
@@ -46,21 +50,47 @@ class RecipeModifier:
         if not candidates:
             return None, None, 0.0
 
-        best_match = None
-        best_index = None
-        best_score = 0.0
+        needle = target.lower().strip()
 
-        for i, candidate in enumerate(candidates):
-            similarity = SequenceMatcher(None, target.lower(), candidate.lower()).ratio()
-            if similarity > best_score:
-                best_score = similarity
-                best_match = candidate
-                best_index = i
+        # 1. Literal containment beats fuzzy similarity. A phrase quoted from a line
+        #    ("about 10 minutes" inside a long instruction) is much shorter than the
+        #    line, so its similarity score is low even though it is an exact match.
+        contained = [i for i, c in enumerate(candidates) if needle and needle in c.lower()]
+        whole_line = [i for i in contained if candidates[i].lower().strip() == needle]
+        if whole_line:
+            return candidates[whole_line[0]], whole_line[0], 1.0
+        if len(contained) == 1:
+            return candidates[contained[0]], contained[0], 1.0
+        if len(contained) > 1:
+            # Guessing here would silently edit the wrong line (e.g. 'shortening' in a
+            # batter and a frosting), so refuse and let the caller report "not found".
+            logger.warning(f"'{target}' is ambiguous: it appears in {len(contained)} lines, not editing")
+            return None, None, 0.0
 
-        if best_score >= self.similarity_threshold:
-            return best_match, best_index, best_score
-        else:
+        # 2. Fuzzy match, but only when there is a clear winner.
+        scored = sorted(
+            ((SequenceMatcher(None, needle, c.lower()).ratio(), i) for i, c in enumerate(candidates)),
+            reverse=True,
+        )
+        best_score, best_index = scored[0]
+        if best_score < self.similarity_threshold:
             return None, None, best_score
+        if len(scored) > 1 and best_score - scored[1][0] < self.AMBIGUITY_MARGIN:
+            logger.warning(
+                f"'{target}' fits two lines almost equally ({best_score:.2f} vs {scored[1][0]:.2f}), not editing"
+            )
+            return None, None, best_score
+        return candidates[best_index], best_index, best_score
+
+    @staticmethod
+    def _replaces_fragment_with_full_line(edit: ModificationEdit, original_text: str) -> bool:
+        """True when `find` is only part of an ingredient line but `replace` is a whole line
+        (it starts with a quantity and `find` does not). Substituting the fragment would nest one
+        quantity inside another, e.g. '1 cup 1.5 cups packed brown sugar'."""
+        if edit.target != "ingredients" or edit.find.strip() == original_text.strip():
+            return False
+        starts_with_quantity = lambda s: bool(re.match(r"\s*\d", s))
+        return starts_with_quantity(edit.replace or "") and not starts_with_quantity(edit.find)
 
     def apply_edit(
         self,
@@ -89,7 +119,7 @@ class RecipeModifier:
             if match and index is not None:
                 original_text = modified_content[index]
 
-                if edit.find in original_text:
+                if edit.find in original_text and not self._replaces_fragment_with_full_line(edit, original_text):
                     # Exact substring present in the fuzzy-matched line - safe to
                     # do a literal replace.
                     new_text = original_text.replace(edit.find, edit.replace or "")
