@@ -160,12 +160,68 @@ the original implementation and how each was fixed.
 # Add dependencies
 uv add <package_name>
 
-# Run the manual pipeline harness (needs OPENAI_API_KEY, calls the real LLM)
+# Run the manual pipeline harness (needs an LLM key, calls the real LLM)
 cd src && uv run python test_pipeline.py single   # or: all
 
-# Run the automated unit test suite (mocked LLM, no API key required)
-cd src && uv run pytest tests/ -v
+# Run the automated test suite (no API key required; the two live-LLM tests are skipped)
+cd src && uv run pytest -v
+
+# Run the live-LLM tests too. They write to a temp dir and call a real (possibly paid) provider.
+cd src && RUN_LIVE_LLM_TESTS=1 uv run pytest test_pipeline.py -v
 ```
+
+## Evaluation
+
+The pipeline has three stages: choose which reviews to use, have an LLM turn each review into
+structured edits, then apply those edits to the recipe. `src/evals/` measures each stage
+against hand-labeled data, so a regression can be traced to the stage that caused it.
+
+```bash
+cd src
+python -m evals.run_eval                           # offline: keyword baseline + all offline metrics
+python -m evals.run_eval --predictor llm-pipeline  # the real pipeline path (needs an LLM key)
+python -m evals.run_eval --predictor llm-model     # the model alone, every review, no selection gate
+python -m evals.run_eval --save preds.json         # keep predictions; re-score later with --predictions
+```
+
+| Data | What it is |
+|---|---|
+| `src/evals/golden_extraction.json` | Golden set. All 19 reviews of the 4 recipes that have reviews, hand-labeled: 31 scored tweaks (type + terms that must appear), 2 marked too vague to score, and 5 reviews with no tweak at all (to catch false alarms). |
+| `src/evals/golden_modifier.json` | 15 edits on real recipe lines, each with the result a careful cook would want. |
+
+| Metric | Stage | Needs a key? |
+|---|---|---|
+| Recall ceiling | Review selection: the share of labeled tweaks that reach the LLM at all | no |
+| Precision / recall / F1 (strict and lenient), recall by type, false-alarm rate | LLM extraction vs. the labels | yes, or the baseline |
+| Edit grounding | Does each extracted `find` point at a real recipe line? | yes |
+| Exact match, silent wrong edits, edits not applied | `RecipeModifier` | no |
+
+**Results measured on this repo** (keyword baseline, no LLM, 2026-10-17):
+
+| | Result |
+|---|---|
+| Recall ceiling | **90.3%**: 3 of 31 tweaks never reach the LLM. The scraper's `has_modification` flag misses real tweaks, e.g. "I threw in carrots" in the Nikujaga recipe. |
+| Keyword baseline, strict | precision 67.7%, recall 67.7%, F1 67.7% (the floor an LLM should beat) |
+| `RecipeModifier` before the fix | 9 of 13 cases correct, **2 silent wrong edits**, 2 edits not applied |
+| `RecipeModifier` after the fix | 15 of 15 cases correct, 0 silent wrong edits |
+
+The modifier failures were real: fuzzy-only matching missed the exact phrase `about 10 minutes` that the
+prompt's own example asks the LLM to use, edited the batter's shortening when a frosting line also matched,
+and turned `packed brown sugar` into `1 cup 1.5 cups packed brown sugar`.
+
+**What these numbers do not show.**
+- **No LLM result is reported.** No API key was available when this was written. Run `--predictor llm-pipeline`
+  to get one; `--save` keeps the predictions so the score can be reproduced.
+- **The golden set is small and labeled by one person** (19 reviews, 4 recipes). Treat differences of a few points as noise.
+- **The modifier fix was written after seeing its failing cases**, so 15/15 is partly tuned to this set.
+  Two more cases (`replace_bare_name_with_quantity`, `add_after_ambiguous_anchor`) were added after the fix to probe
+  its edges and passed, but they were never run against the old modifier, so they are not part of the before/after numbers.
+- **The baseline's cue words were written after reading these reviews.** It is a floor, not an independent benchmark.
+- **Matching is term-based.** A prediction counts if the type is right and a labeled term appears in it, so a
+  correct edit with unexpected wording is scored as a miss.
+
+The golden set is tied to the committed `data/` files by a text prefix per review, so a re-scrape that
+changes a review fails `test_golden_set_matches_committed_data` instead of silently mislabeling it.
 
 ## Agentic System (`.github/`)
 
